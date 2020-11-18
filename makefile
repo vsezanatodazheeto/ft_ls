@@ -36,6 +36,10 @@ L_NAME := $(addprefix $(L_DIR), $(L_NAME))
 
 all: $(L_RULE) $(PROG_NAME)
 
+# colour:
+				# @echo "\e[38;5;69m"
+# %.lib:	colour
+
 %.lib:
 	@$(MAKE) -sC $(L_DIR)
 

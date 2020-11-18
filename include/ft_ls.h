@@ -1,6 +1,8 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
+/* nashi */
+#include <inttypes.h>
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
@@ -50,7 +52,7 @@
 #include <stdlib.h>
 // ◦ exit
 
-static int flag = 0;
+# define CH_FLAG '-'
 // тип флага
 typedef enum		t_flags
 {
@@ -78,5 +80,11 @@ typedef struct		my_struct
 	e_flags			options;
 	t_list			args;
 }					t_struct;
+
+void printFileProperties(struct stat stats);
+
+char		***av_split(int ac, char *av[]);
+void		av_free(char ***splited_av);
+void		av_print(char ***splited_av);
 
 #endif
