@@ -27,7 +27,7 @@ PROG_NAME = a.out
 PROG_DIR := src/
 
 # PROGRAM SRCS
-PROG_SRC = main
+PROG_SRC = main av_parse parse
 PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 
 # FILE PATH TO LIB, PROGRAM SRC/OBJ FILES

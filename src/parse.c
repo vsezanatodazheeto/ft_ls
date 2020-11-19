@@ -1,51 +1,77 @@
 #include "ft_ls.h"
 
-// вынести в библиотеку как мини парсер для аргументов из стандартного потока ввода
-
-/*
-** consider any cases:
-** ./ft_ls -l -r ... args
-** ./ft_ls "-l -r ...args"
-** ./ft_ls "-l" ... "-r" ... "args_2"
-*/
-
-void		av_print(char ***splited_av)
+int32_t			update_flags(const int8_t shift)
 {
-	for (int j = 0; splited_av[j]; j++)
-		for (int n = 0; splited_av[j][n]; n++)
-			ft_printf("{green}%s\n{eoc}", splited_av[j][n]);
+	static int32_t flags = 0;
+
+	flags = flags | 1 << shift;
+	return (flags);
 }
 
-void		av_free(char ***splited_av)
+static t_list	*update_args(char ***splited_av)
 {
-	for (int32_t i = 0; splited_av[i]; i++)
-		ft_arrdel((void ***)&splited_av[i]);
-	free(splited_av);
+
 }
 
-char		***av_split(int ac, char *av[])
+static void		parse_set_flags(char *av)
 {
-	int32_t	i;
-	char	***splited_av;
+	e_flags		flag;
 
-	i = 0;
+	if (!av)
+		return ;
+	av++; //skip - (minus)
+	flag = fl_noex;
+	while (*av)
 	{
-		ac--;
+		if (*av == 'a')
+			flag = fl_a;
+		else if (*av == 'l')
+			flag = fl_l;
+		else if (*av == 'r')
+			flag = fl_r;
+		else if (*av == 't')
+			flag = fl_t;
+		else if (*av == 'R')
+			flag = fl_R;
+		else
+			exit(1);
+		update_flags(flag);
 		av++;
 	}
-	splited_av = (char ***)malloc(sizeof(char **) * (ac + 1));
-	if (!splited_av)
-		return (NULL);
-	splited_av[ac] = NULL;
-	while (i < ac)
+}
+
+static void		parse_check_flags(char ***splited_av)
+{
+	int32_t		i;
+	int32_t		j;
+
+	i = 0;
+	while (splited_av[i])
 	{
-		splited_av[i] = ft_strsplit(av[i], ' ');
-		if (!splited_av[i])
+		if (splited_av[i][0] && splited_av[i][0][0] != CH_FLAG)
+			break ;
+		j = 0;
+		while (splited_av[i][j])
 		{
-			av_free(splited_av);
-			return (NULL);
+			if (splited_av[i][j][0] != CH_FLAG)
+				break ;
+			parse_set_flags(splited_av[i][j]);
+			j++;
 		}
 		i++;
 	}
-	return (splited_av);
+}
+
+void			parse_args(t_struct *st, int ac, char *av[])
+{
+	char		***splited_av;
+
+	splited_av = av_split(ac, av);
+	if (!splited_av)
+		exit (1);
+	parse_check_flags(splited_av);
+	st->flag = update_flags(fl_noex);
+	st->args = update_args(splited_av);
+	av_print(splited_av);
+	av_free(splited_av);
 }

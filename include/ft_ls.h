@@ -53,14 +53,17 @@
 // ◦ exit
 
 # define CH_FLAG '-'
+
 // тип флага
+// A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.
 typedef enum		t_flags
 {
-	l,
-	r,
-	a,
-	t,
-	R
+	fl_noex = -1,
+	fl_a,
+	fl_l,
+	fl_r,
+	fl_t,
+	fl_R
 }					e_flags;
 
 // информация о файле/директории
@@ -74,15 +77,18 @@ typedef struct		s_args
 // основная хуйня
 typedef struct		my_struct
 {
-	int				ac;
-	char			**av;
-	int				flag;
-	e_flags			options;
-	t_list			args;
+	uint32_t		flag;
+	t_list			*args;
 }					t_struct;
 
+/* TRASH */
 void printFileProperties(struct stat stats);
 
+/* PARSER */
+void		parse_args(t_struct *st, int ac, char *av[]);
+int32_t		update_flags(const int8_t shift);
+
+/* LIB PARSER */
 char		***av_split(int ac, char *av[]);
 void		av_free(char ***splited_av);
 void		av_print(char ***splited_av);

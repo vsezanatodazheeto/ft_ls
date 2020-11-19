@@ -1,54 +1,11 @@
 #include "ft_ls.h"
 
-void		parse_set_flags(char *av)
-{
-	ft_printf("{red}av: %s\n{eoc}", av);
-}
-
-static void	parse_check_flags(char ***splited_av)
-{
-	int32_t	i;
-	int32_t	j;
-	uint8_t is_flags_end;
-
-	i = 0;
-	j = 0;
-	is_flags_end = 0;
-	while (splited_av[i] && !is_flags_end)
-	{
-		while (splited_av[i][j] && !is_flags_end)
-		{
-			if (splited_av[i][j][0] == CH_FLAG)
-				parse_set_flags(splited_av[i][j]);
-			else
-				is_flags_end = 1;
-			j++;
-		}
-		i++;
-	}
-}
-
-void        parse_args(t_struct *st, int ac, char *av[])
-{
-	char	***splited_av;
-
-	splited_av = av_split(ac, av);
-	if (!splited_av)
-		exit (1);
-	parse_check_flags(splited_av);
-	// av_print(splited_av);
-
-	av_free(splited_av);
-}
-
 int			main(int ac, char *av[])
 {
 	t_struct	st[1];
 
 	ft_bzero(st, sizeof(st));
     parse_args(st, ac, av);
-
-
 
 	// struct stat stats;
 	// char *path = ".";
