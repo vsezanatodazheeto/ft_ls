@@ -5,10 +5,50 @@ void        print_files(void)
     printf("PRINT FILES\n");
 }
 
+  
 
-void        print_dir_contains(void)
+    //     while ((pDirent = readdir(pDir)) != NULL) {
+    //         printf ("[%s]\n", pDirent->d_name);
+    //     }
+
+    //     // Close directory and exit.
+
+    //     closedir (pDir);
+    //     return 0;
+    // }
+
+t_args		*print_dir_contains(t_args *arg)
 {
-    printf("PRINT DIR CONTAINS\n");
+	struct dirent *p_dir;
+	DIR		*dir;
+	t_args	*new_args;
+
+	if (!arg)
+		return (NULL);
+	new_args = NULL;
+	dir = opendir(arg->name);
+	p_dir = NULL;
+	if (!dir)
+	{
+		ft_printf("{neon} could not open dir: %s\n{eoc}", arg->name);
+		return (NULL);
+	}
+	while ((p_dir = readdir(dir)) != NULL)
+	{
+		// ft_printf("{red}%s\n{eoc}", p_dir->d_name);
+		if (ft_strcmp(p_dir->d_name, ".") != 0|| ft_strcmp(p_dir->d_name, "..") != 0)
+		{
+			add_arg(&new_args);
+			new_args->name = ft_strdup(p_dir->d_name);
+			if (!new_args->name)
+				exit(1);
+			ft_printf("%s\n", new_args->name);
+			if (stat(new_args->name, &new_args->stat) == -1)
+				exit(2);
+		}
+	}
+	closedir(dir);
+	return (new_args);
 }
 
 void        ft_ls(t_args *args)
@@ -17,20 +57,21 @@ void        ft_ls(t_args *args)
     t_args  *possible_new_args;
 
     cur = args;
+	ft_printf("{green}weubygeruybugeruerguieruibubrgubieriug{eoc}\n");
     while(cur)
     {
-        if (S_ISREG(args->stat.st_mode) && !(update_flags(-1) & 1 << fl_R))
-        {
+        if (S_ISREG(cur->stat.st_mode) && !(update_flags(-1) & 1 << fl_R))
             print_files();
-        }
-        else if (S_ISDIR(args->stat.st_mode))
+        else if (S_ISDIR(cur->stat.st_mode))
         {
+			ft_printf("{pink}%s\n{eoc}", cur->name);
             //opendir and parser for new args;
-            print_dir_contains();
+            possible_new_args = print_dir_contains(cur);
+			if (!possible_new_args)
+				break ;
             if(update_flags(-1) & 1 << fl_R)
             {
-                printf("HERE RECURSE!\n");
-                //ft_ls(possible_new_args);
+                ft_ls(possible_new_args);
             }
         }
         cur = cur->next;

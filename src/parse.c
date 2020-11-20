@@ -43,7 +43,8 @@ static t_args	*update_args(char ***splited_av)
 			{
 				add_arg(&arg);
 				arg->name = ft_strdup(splited_av[i][j]);
-				//is arg name exist
+				if (!arg->name)
+					exit(1);
 				if (lstat(arg->name, &arg->stat) == -1)
 					exit(1);
 			}

@@ -78,7 +78,6 @@ typedef struct		s_args
 {
 	char			*name;
 	struct stat 	stat;
-	e_type			t_type;
 	struct s_args	*next;
 }					t_args;
 
@@ -92,6 +91,8 @@ typedef struct		s_main
 /* PARSER */
 void		parse_args(t_main *st, int ac, char *av[]);
 int32_t		update_flags(const int8_t shift);
+void		add_arg(t_args **arg);
+t_args		*create_arg(void);
 
 /* LIB PARSER */
 char		***av_split(int ac, char *av[]);
