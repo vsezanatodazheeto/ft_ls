@@ -34,11 +34,11 @@ PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 PROG_SRC := $(addprefix $(PROG_DIR), $(PROG_SRC))
 L_NAME := $(addprefix $(L_DIR), $(L_NAME))
 
-all: $(L_RULE) $(PROG_NAME)
-
 # colour:
 				# @echo "\e[38;5;69m"
 # %.lib:	colour
+
+all: $(L_RULE) $(PROG_NAME)
 
 %.lib:
 	@$(MAKE) -sC $(L_DIR)

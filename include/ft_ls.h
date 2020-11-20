@@ -21,11 +21,11 @@
 
 #include <sys/types.h>
 #include <pwd.h>
-#include <uuid/uuid.h>
+// #include <uuid/uuid.h>
 // ◦ getpwuid // получают запись из файла паролей
 
 #include <grp.h>
-#include <uuid/uuid.h>
+// #include <uuid/uuid.h>
 // ◦ getgrgid // получает записи файла групп
 
 #include <sys/xattr.h>
@@ -66,23 +66,27 @@ typedef enum		t_flags
 	fl_R
 }					e_flags;
 
-// информация о файле/директории
+// type of (dir or file)
+typedef enum		t_type
+{
+	t_dir,
+	t_fol
+}					e_type;
+
+// информация об аргументе программы
 typedef struct		s_args
 {
 	char			*name;
 	struct stat 	stat;
-	struct s_list	*next;
+	struct s_args	*next;
 }					t_args;
 
 // основная хуйня
 typedef struct		my_struct
 {
 	uint32_t		flag;
-	t_list			*args;
+	t_args			*args;
 }					t_struct;
-
-/* TRASH */
-void printFileProperties(struct stat stats);
 
 /* PARSER */
 void		parse_args(t_struct *st, int ac, char *av[]);
@@ -92,5 +96,8 @@ int32_t		update_flags(const int8_t shift);
 char		***av_split(int ac, char *av[]);
 void		av_free(char ***splited_av);
 void		av_print(char ***splited_av);
+
+/* TRASH */
+void printFileProperties(struct stat stats);
 
 #endif
