@@ -43,36 +43,46 @@ static t_args	*update_args(char ***splited_av)
 			{
 				add_arg(&arg);
 				arg->name = ft_strdup(splited_av[i][j]);
+				//is arg name exist
+				if (lstat(arg->name, &arg->stat) == -1)
+					exit(1);
 			}
 		}
+	}
+	if(!arg)
+	{
+		add_arg(&arg);
+		arg->name = ft_strdup(".");
+		if (lstat(arg->name, &arg->stat) == -1)
+			exit(1);
 	}
 	return (arg);
 }
 
 static void		parse_set_flags(char *av)
 {
-	e_flags		flag;
+	e_flags		shift;
 
 	if (!av)
 		return ;
 	av++; //skip - (minus)
-	flag = fl_noex;
+	shift = fl_noex;
 	while (*av)
 	{
 		if (*av == 'a')
-			flag = fl_a;
+			shift = fl_a;
 		else if (*av == 'l')
-			flag = fl_l;
+			shift = fl_l;
 		else if (*av == 'r')
-			flag = fl_r;
+			shift = fl_r;
 		else if (*av == 't')
-			flag = fl_t;
+			shift = fl_t;
 		else if (*av == 'R')
-			flag = fl_R;
+			shift = fl_R;
 		else
 			;
 			// exit(1);
-		update_flags(flag);
+		update_flags(shift);
 		av++;
 	}
 }
@@ -99,7 +109,7 @@ static void		parse_check_flags(char ***splited_av)
 	}
 }
 
-void			parse_args(t_struct *st, int ac, char *av[])
+void			parse_args(t_main *st, int ac, char *av[])
 {
 	char		***splited_av;
 
@@ -110,8 +120,17 @@ void			parse_args(t_struct *st, int ac, char *av[])
 	st->flag = update_flags(fl_noex);
 	st->args = update_args(splited_av);
 
-	av_print(splited_av);
-	for (; st->args; st->args = st->args->next)
-		ft_printf("{pink}%s\n{eoc}", st->args->name);
+	// av_print(splited_av);
+	// for (; st->args; st->args = st->args->next)
+	// {
+	// 	// printFileProperties(st->args->stat);
+	// 	if (S_ISREG(st->args->stat.st_mode))
+	// 		ft_printf("{blue}file{eoc}: ");
+	// 	else if (S_ISDIR(st->args->stat.st_mode))
+	// 		ft_printf("{red}directory{eoc}: ");
+	// 	else
+	// 		ft_printf("{blue}neizvestno{eoc}: ");
+	// 	ft_printf("{pink}%s\n{eoc}", st->args->name);
+	// }
 	av_free(splited_av);
 }

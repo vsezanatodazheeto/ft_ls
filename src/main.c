@@ -1,11 +1,52 @@
 #include "ft_ls.h"
 
+void        print_files(void)
+{
+    printf("PRINT FILES\n");
+}
+
+
+void        print_dir_contains(void)
+{
+    printf("PRINT DIR CONTAINS\n");
+}
+
+void        ft_ls(t_args *args)
+{
+    t_args  *cur;
+    t_args  *possible_new_args;
+
+    cur = args;
+    while(cur)
+    {
+        if (S_ISREG(args->stat.st_mode) && !(update_flags(-1) & 1 << fl_R))
+        {
+            print_files();
+        }
+        else if (S_ISDIR(args->stat.st_mode))
+        {
+            //opendir and parser for new args;
+            print_dir_contains();
+            if(update_flags(-1) & 1 << fl_R)
+            {
+                printf("HERE RECURSE!\n");
+                //ft_ls(possible_new_args);
+            }
+        }
+        cur = cur->next;
+    }
+}
+
+
 int			main(int ac, char *av[])
 {
-	t_struct	st[1];
+	t_main	st[1];
 
 	ft_bzero(st, sizeof(st));
     parse_args(st, ac, av);
+
+    ft_ls(st->args);
+
 
 	// struct stat stats;
 	// char *path = ".";
@@ -39,18 +80,7 @@ int			main(int ac, char *av[])
 	return (0);
 }
 
-// void				parse(t_frame *frame)
-// {
-// 	get_args(frame);
-// 	get_options(frame);
-// 	config_options(frame);
-// }
 
-
-
-
-
-// 9:59
 // #include "ft_ls.h"
 // static void			parse_options(t_frame *frame, int option)
 // {

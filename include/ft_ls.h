@@ -78,18 +78,19 @@ typedef struct		s_args
 {
 	char			*name;
 	struct stat 	stat;
+	e_type			t_type;
 	struct s_args	*next;
 }					t_args;
 
 // основная хуйня
-typedef struct		my_struct
+typedef struct		s_main
 {
 	uint32_t		flag;
 	t_args			*args;
-}					t_struct;
+}					t_main;
 
 /* PARSER */
-void		parse_args(t_struct *st, int ac, char *av[]);
+void		parse_args(t_main *st, int ac, char *av[]);
 int32_t		update_flags(const int8_t shift);
 
 /* LIB PARSER */
