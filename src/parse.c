@@ -44,25 +44,16 @@ static t_file	*update_files(char ***splited_av)
 			{
 				add_file(&fls);
 				if (lstat(splited_av[i][j], &fls->stat) < 0)
-				{
 					fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
-					if (!(fls->name = ft_strdup(splited_av[i][j])))
-						exit(1);
-				}
-				else
-				{
-					// КОСТЫЛИЩЕ ЕБАНОЕ, наверное небезопасно,
-        			// if (S_ISDIR(fls->stat.st_mode) && splited_av[i][j][ft_strlen(splited_av[i][j]) - 1] == CH_SLASH)
-        				// splited_av[i][j][ft_strlen(splited_av[i][j]) - 1] = '\0';
-					fls->name = ft_strdup(splited_av[i][j]);
-				}
+				if (!(fls->name = ft_strdup(splited_av[i][j])))
+					exit(1);
 			}
 		}
 	}
 	if(!fls)
 	{
 		add_file(&fls);
-		fls->name = ft_strdup(".");
+		fls->name = ft_strdup(D_CURR);
 		if (lstat(fls->name, &fls->stat) < 0)
 		{
 			// не знаю, нужно ли тут это, в коем веке мы не можем узнать инфу о папке, в которой находимся
@@ -134,10 +125,9 @@ t_file			*parse_args(int ac, char *av[])
 	parse_check_flags(splited_av);
 	fls = update_files(splited_av);
 
-	t_file *k;
-
-	k = fls;
 	/* check */
+	t_file *k;
+	k = fls;
 	ft_printf("{blue}CHECK:{eoc}\n");
 	for (; k; k = k->next)
 		ft_printf("{blue}%s\n{eoc}", k->name);

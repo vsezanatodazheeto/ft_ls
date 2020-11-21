@@ -6,7 +6,9 @@
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
+
 #include <limits.h>
+// PATH_MAX, NAME_MAX
 
 #include "unistd.h"
 // ◦ write
@@ -54,6 +56,9 @@
 # define CH_FLAG '-'
 # define CH_SLASH '/'
 # define S_SLASH "/"
+
+# define D_CURR "."
+# define D_BACK ".."
 
 // тип флага
 // A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.

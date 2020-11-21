@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re
+.PHONY: all trash clean fclean re
 
 # COLORS FOR OUTPUT
 BLUE = "\e[38;5;69m"
@@ -6,7 +6,7 @@ EOC = "\e[0m"
 
 # COMPILER SETTINGS
 CC = clang
-# CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 
 # LIB (LIBFT, GET_NEXT_LINE, PRINTF)
 L_DIR = lib/
@@ -45,12 +45,15 @@ all: $(L_RULE) $(PROG_NAME)
 
 $(PROG_NAME) : $(PROG_SRC) $(H_NAME) $(L_NAME)
 	@$(CC) $(CFLAGS) $(PROG_SRC) $(L_NAME) -o $(PROG_NAME) -I $(H_DIR)
-	@echo $(BLUE)"MALLOC COMPILED"$(EOC)
+	@echo $(BLUE)"FT_LS COMPILED"$(EOC)
+
+trash:
+	@rm -rf *.dSYM/
 
 clean:
 	@$(MAKE) -sC $(L_DIR) clean
 
-fclean: clean
+fclean: clean trash
 	@$(MAKE) -sC $(L_DIR) fclean
 	@rm -f $(PROG_NAME)
 

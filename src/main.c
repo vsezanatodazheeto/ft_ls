@@ -11,6 +11,21 @@ void		print_files_a(t_file *fls)
 		ft_printf("%s\n", fls->name);
 }
 
+void				set_new_path(t_file *d_fl, char *new_path, char *old_path)
+{
+	*new_path = '\0';
+	if (old_path)
+	{
+		ft_strcat(new_path, old_path);
+		ft_strcat(new_path, "/");
+	}
+	else
+	{
+		ft_strcat(new_path, d_fl->name);
+		ft_strcat(new_path, "/");
+	}
+}
+
 void				print_dir_contains(t_file *d_fl, char *old_path)
 {
 	DIR				*dir;
@@ -19,23 +34,13 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	char			new_path[PATH_MAX];
 	char			full_path[PATH_MAX + NAME_MAX];
 	
-	new_path[0] = '\0';
-	if (!old_path)
-	{
-		ft_strcat(new_path, d_fl->name);
-		ft_strcat(new_path, "/");
-	}
-	else
-	{
-		ft_strcat(new_path, old_path);
-		ft_strcat(new_path, "/");
-	}
+	set_new_path(d_fl, new_path, old_path);
 
 	ft_printf("{green}%s:\n{eoc}", new_path);
 
-
 	fls = NULL;
 	dir = opendir(new_path);
+
 	if (!dir)
 	{
 		ft_printf("{neon} could not open dir: %s\n{eoc}", new_path);
@@ -73,7 +78,6 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 				gg_path[0] = '\0';
 				ft_strcat(gg_path, new_path);
 				ft_strcat(gg_path, fls->name);
-				// ft_printf("{orange}%s:\n{eoc}", gg_path);
 				ft_ls(fls, gg_path);
 			}
 	}
