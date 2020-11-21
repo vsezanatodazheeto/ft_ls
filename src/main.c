@@ -5,45 +5,28 @@ void        print_files(void)
     printf("PRINT FILES\n");
 }
 
-  
-
-    //     while ((pDirent = readdir(pDir)) != NULL) {
-    //         printf ("[%s]\n", pDirent->d_name);
-    //     }
-
-    //     // Close directory and exit.
-
-    //     closedir (pDir);
-    //     return 0;
-    // }
-
-t_args		*print_dir_contains(t_args *arg)
+t_file		*print_dir_contains(t_file *arg)
 {
-	struct dirent *p_dir;
-	DIR		*dir;
-	t_args	*new_args;
+	DIR				*dir;
+	struct dirent	*entry;
+	t_file			*new_args;
 
-	if (!arg)
-		return (NULL);
-	new_args = NULL;
 	dir = opendir(arg->name);
-	p_dir = NULL;
+	new_args = NULL;
 	if (!dir)
 	{
 		ft_printf("{neon} could not open dir: %s\n{eoc}", arg->name);
-		return (NULL);
+		exit(1);
 	}
-	while ((p_dir = readdir(dir)) != NULL)
+	while ((entry = readdir(dir)))
 	{
-		// ft_printf("{red}%s\n{eoc}", p_dir->d_name);
-		if (ft_strcmp(p_dir->d_name, ".") != 0|| ft_strcmp(p_dir->d_name, "..") != 0)
+		ft_printf("%s\n", entry->d_name);
+		if (ft_strcmp(entry->d_name, ".") != 0 && ft_strcmp(entry->d_name, "..") != 0)
 		{
-			add_arg(&new_args);
-			new_args->name = ft_strdup(p_dir->d_name);
-			if (!new_args->name)
+			add_file(&new_args);
+			if (!(new_args->name = ft_strdup(entry->d_name)))
 				exit(1);
-			ft_printf("%s\n", new_args->name);
-			if (stat(new_args->name, &new_args->stat) == -1)
+			if (stat(new_args->path, &new_args->stat) < 0)
 				exit(2);
 		}
 	}
@@ -51,23 +34,21 @@ t_args		*print_dir_contains(t_args *arg)
 	return (new_args);
 }
 
-void        ft_ls(t_args *args)
+void        ft_ls(t_file *args)
 {
-    t_args  *cur;
-    t_args  *possible_new_args;
+    t_file  *cur;
+    t_file  *possible_new_args;
 
     cur = args;
-	ft_printf("{green}weubygeruybugeruerguieruibubrgubieriug{eoc}\n");
+	ft_printf("------------------------------------------------------------\n");
     while(cur)
     {
         if (S_ISREG(cur->stat.st_mode) && !(update_flags(-1) & 1 << fl_R))
             print_files();
         else if (S_ISDIR(cur->stat.st_mode))
         {
-			ft_printf("{pink}%s\n{eoc}", cur->name);
-            //opendir and parser for new args;
-            possible_new_args = print_dir_contains(cur);
-			if (!possible_new_args)
+			ft_printf("{pink}DIR: [%s]\n{eoc}", cur->name);
+            if (!(possible_new_args = print_dir_contains(cur)))
 				break ;
             if(update_flags(-1) & 1 << fl_R)
             {
@@ -81,223 +62,9 @@ void        ft_ls(t_args *args)
 
 int			main(int ac, char *av[])
 {
-	t_main	st[1];
+	t_file	*fls;
 
-	ft_bzero(st, sizeof(st));
-    parse_args(st, ac, av);
-
-    ft_ls(st->args);
-
-
-	// struct stat stats;
-	// char *path = ".";
-	// char kek[1024];
-
-
-	// DIR *dir;
-    // struct dirent *entry;
-
-    // dir = opendir(path);
-    // if (!dir) {
-    //     perror("diropen");
-    //     exit(1);
-    // };
-    // while ( (entry = readdir(dir)) != NULL) {
-    //     printf("%lld - %s [%d] %d\n",
-    //         entry->d_ino, entry->d_name, entry->d_type, entry->d_reclen);
-    // };
-    // closedir(dir);
-
-	// stat(path, &stats);
-	// if (stat(path, &stats) == 0)
-    // {
-    //     printFileProperties(stats);
-    // }
-    // else
-    // {
-    //     printf("Unable to get file properties.\n");
-    //     printf("Please check whether '%s' file exists.\n", path);
-    // }
+    fls = parse_args(ac, av);
+    // ft_ls(st->args);
 	return (0);
 }
-
-
-// #include "ft_ls.h"
-// static void			parse_options(t_frame *frame, int option)
-// {
-// 	char			**argv;
-// 	char			**argv_options;
-// 	if (!option)
-// 		return ;
-// 	if (!(frame->argv_options = (char **)malloc(sizeof(char *) * (option + 1))))
-// 		error_exit(frame, "Malloc Failed");
-// 	*frame->argv_options = *(frame->argv + 1);
-// 	argv = frame->argv + 1;
-// 	argv_options = frame->argv_options;
-// 	while (*argv && **argv == '-' && argv[0][1])
-// 	{
-// 		*argv_options = *argv;
-// 		argv++;
-// 		argv_options++;
-// 	}
-// 	*argv_options = NULL;
-// }
-// static void			parse_args(t_frame *frame, char **argv)
-// {
-// 	t_args			*args;
-// 	t_args			*last_args;
-// 	if (*argv)
-// 		argv++;
-// 	if (!*argv)
-// 	{
-// 		if (!(frame->args = create_args()))
-// 			error_exit(frame, "Malloc Failed");
-// 		if (!(frame->args->data.str = ft_strdup("."))
-// 				|| !(frame->args->data.path = ft_strdup(".")))
-// 			error_exit(frame, "Malloc Failed");
-// 	}
-// 	while (*argv)
-// 	{
-// 		if (!(args = create_args()))
-// 			error_exit(frame, "Malloc Failed");
-// 		path(frame, args, ".", *argv);
-// 		if (!frame->args)
-// 			frame->args = args;
-// 		else
-// 			last_args->next = args;
-// 		last_args = args;
-// 		argv++;
-// 	}
-// }
-// static int			calculate_option_strings(t_frame *frame)
-// {
-// 	char			**argv;
-// 	int				option;
-// 	option = 0;
-// 	argv = frame->argv + 1;
-// 	while (*argv && **argv == '-' && argv[0][1])
-// 	{
-// 		option++;
-// 		argv++;
-// 	}
-// 	return (option);
-// }
-// void				get_args(t_frame *frame)
-// {
-// 	int	i;
-	
-// 	i = calculate_option_strings(frame);
-// 	parse_options(frame, i);
-// 	parse_args(frame, frame->argv + i);
-// }
-// 9:59
-// #include "ft_ls.h"
-// static void			print_bad_options(t_frame *frame)
-// {
-// 	int				i;
-// 	int				fl;
-// 	i = 0;
-// 	fl = 0;
-// 	while(i++ < 256)
-// 	{
-// 		if(frame->opt[i] && i != 'a' && i != 'l' && i != 'r' && i != 't' && i != 'R' && i != 'g' && i != 'o')
-// 		{
-// 			if (fl)
-// 				write(2, "\n", 1);
-// 			ft_putstr_fd("ft_ls: illegal option -- ", 2);
-// 			write(2, &i, 1);
-// 			fl = 1;
-// 		}
-// 	}
-// // 	char			option_char;
-// // 	unsigned long	one;
-// // 	unsigned char	shifts;
-// // 	char			correction;
-// // 	one = 1;
-// // 	shifts = 0;
-// // 	ft_putstr_fd("ft_ls: illegal option -- ", 2);
-// // 	while (shifts < 63)
-// // 	{
-// // 		correction = (shifts < 26) ? 97 : 39;
-// // 		(shifts > 51) ? correction = -4 : 0;
-// // 		(shifts > 62) ? correction = -30 : 0;
-// // 		if (bad_options & one)
-// // 		{
-// // 			option_char = shifts + correction;
-// // 			write(2, &option_char, 1);
-// // 		}
-// // 		shifts++;
-// // 		bad_options >>= 1;
-// // 	}
-// 	if(fl)
-// 	{
-// 		ft_putstr_fd("\nusage: ./ft_ls [", 2);
-// 		ft_putstr_fd(OPTIONS, 2);
-// 		error_exit(frame, "] [file ...]");
-// 	}
-// }
-// // static void			get_compliment_of_all_options(t_frame *frame,
-// // 		unsigned long *compliment_of_all_options)
-// // {
-// // 	char			**all_options;
-// // 	if (!(all_options = (char **)malloc(sizeof(char *) * 3)))
-// // 		error_exit(frame, "Malloc Failed [all_options]");
-// // 	all_options[0] = NULL;
-// // 	all_options[2] = NULL;
-// // 	if (!(all_options[1] = ft_strdup(OPTIONS)))
-// // 	{
-// // 		free(all_options);
-// // 		error_exit(frame, "Malloc Failed [all_options]");
-// // 	}
-// // 	*compliment_of_all_options = ~options(all_options);
-// // 	free(all_options[1]);
-// // 	free(all_options);
-// // }
-// static void			options_error_check(t_frame *frame)
-// {
-// 	// char			**argv;
-// 	// unsigned long	compliment_of_all_options;
-// 	// argv = frame->argv;
-// 	// get_compliment_of_all_options(frame, &compliment_of_all_options);
-// 	// if (option_data &= compliment_of_all_options)
-// 		print_bad_options(frame);
-// }
-// static void			fetch_options(t_frame *frame)
-// {
-// 	frame->option.a = frame->opt['a'];
-// 	frame->option.l = frame->opt['l'];
-// 	frame->option.r = frame->opt['r'];
-// 	frame->option.t = frame->opt['t'];
-// 	frame->option.up_r = frame->opt['R'];
-// 	frame->option.o = frame->opt['o'];
-// 	frame->option.g = frame->opt['g'];
-// 	ft_printf("%d - opt a\n", frame->option.a);
-// 	ft_printf("%d - opt l\n", frame->option.l);
-// 	ft_printf("%d - opt r\n", frame->option.r);
-// 	ft_printf("%d - opt t\n", frame->option.t);
-// 	ft_printf("%d - opt R\n", frame->option.up_r);
-// 	ft_printf("%d - opt o\n", frame->option.o);
-// 	ft_printf("%d - opt g\n", frame->option.g);
-// }
-// void				get_options(t_frame *frame)
-// {
-// 	// unsigned long	option_data;
-// 	char			**av;
-	
-// 	if (!frame->argv_options)
-// 		return ;
-// 	av = frame->argv_options;
-// 	while(*av)
-// 	{
-// 		while(**av)
-// 		{
-// 			if(**av != '-')
-// 				frame->opt[(int)**av] = 1;
-// 			(*av)++;
-// 		}
-// 		av++;
-// 	}
-// 	// option_data = options(frame->argv_options);
-// 	fetch_options(frame);
-// 	options_error_check(frame);
-// }

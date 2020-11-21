@@ -6,6 +6,7 @@
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
+#include <linux/limits.h>
 
 #include "unistd.h"
 // ◦ write
@@ -53,6 +54,8 @@
 // ◦ exit
 
 # define CH_FLAG '-'
+# define CH_SLASH '/'
+# define S_SLASH "/"
 
 // тип флага
 // A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.
@@ -66,33 +69,35 @@ typedef enum		t_flags
 	fl_R
 }					e_flags;
 
-// type of (dir or file)
+// type of file (dir or reg_file)
 typedef enum		t_type
 {
 	t_dir,
-	t_fol
+	t_fl
 }					e_type;
 
-// информация об аргументе программы
-typedef struct		s_args
+typedef enum		t_err_file
+{
+	fe_noer,		//no errors
+	fe_noex,		// dile doesn't exist
+	fe_nopr			// no permissions
+}					e_err_file;
+
+// основная хуйня 2.0.
+typedef struct		s_file
 {
 	char			*name;
+	char			path[PATH_MAX];
 	struct stat 	stat;
-	struct s_args	*next;
-}					t_args;
-
-// основная хуйня
-typedef struct		s_main
-{
-	uint32_t		flag;
-	t_args			*args;
-}					t_main;
+	e_err_file		fe_err;
+	struct s_file	*next;
+}					t_file;
 
 /* PARSER */
-void		parse_args(t_main *st, int ac, char *av[]);
+t_file		*parse_args(int ac, char *av[]);
 int32_t		update_flags(const int8_t shift);
-void		add_arg(t_args **arg);
-t_args		*create_arg(void);
+void		add_file(t_file **fls);
+t_file		*create_file(void);
 
 /* LIB PARSER */
 char		***av_split(int ac, char *av[]);

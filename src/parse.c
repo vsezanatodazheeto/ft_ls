@@ -8,56 +8,72 @@ int32_t			update_flags(const int8_t shift)
 	return (flags);
 }
 
-t_args			*create_arg(void)
+t_file			*create_file(void)
 {
-	t_args		*arg;
+	t_file		*fl;
 
-	arg = (t_args *)malloc(sizeof(t_args));
-	if (!arg)
+	fl = (t_file *)malloc(sizeof(t_file));
+	if (!fl)
 		exit(1);
-	arg->name = NULL;
-	arg->next = NULL;
-	return (arg);
+	fl->name = NULL;
+	fl->fe_err = fe_noer;
+	fl->next = NULL;
+	return (fl);
 }
 
-void			add_arg(t_args **arg)
+void			add_file(t_file **fls)
 {
-	t_args		*new_arg;
+	t_file		*new_fl;
 
-	new_arg = create_arg();
-	if (*arg)
-		new_arg->next = *arg;
-	*arg = new_arg;
+	new_fl = create_file();
+	if (*fls)
+		new_fl->next = *fls;
+	*fls = new_fl;
 }
 
-static t_args	*update_args(char ***splited_av)
+static t_file	*update_files(char ***splited_av)
 {
-	t_args		*arg;
+	t_file		*fls;
 
-	arg = NULL;
+	fls = NULL;
 	for (int i = 0; splited_av[i]; i++)
 	{
 		for (int j = 0; splited_av[i][j]; j++)
 		{
 			if (splited_av[i][j][0] != '-' && splited_av[i][j][0] != '\0')
 			{
-				add_arg(&arg);
-				arg->name = ft_strdup(splited_av[i][j]);
-				if (!arg->name)
-					exit(1);
-				if (lstat(arg->name, &arg->stat) == -1)
-					exit(1);
+				add_file(&fls);
+				if (lstat(splited_av[i][j], &fls->stat) < 0)
+				{
+					fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
+					if (!(fls->name = ft_strdup(splited_av[i][j])))
+						exit(1);
+				}
+				else
+				{
+					// КОСТЫЛИЩЕ ЕБАНОЕ, наверное небезопасно,
+					// как минимум нихуя не понятно
+					// потом объясню
+        			if (S_ISDIR(fls->stat.st_mode) && splited_av[i][j][ft_strlen(splited_av[i][j]) - 1] != CH_SLASH)
+						fls->name = ft_strjoin(splited_av[i][j], S_SLASH);
+					else
+						fls->name = ft_strdup(splited_av[i][j]);
+				}
 			}
 		}
 	}
-	if(!arg)
+	if(!fls)
 	{
-		add_arg(&arg);
-		arg->name = ft_strdup(".");
-		if (lstat(arg->name, &arg->stat) == -1)
-			exit(1);
+		add_file(&fls);
+		fls->name = ft_strdup("./");
+		if (lstat(fls->name, &fls->stat) < 0)
+		{
+			// не знаю, нужно ли тут это, в коем веке мы не можем узнать инфу о папке, в которой находимся
+			fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
+		}
 	}
-	return (arg);
+	ft_strncpy(fls->path, "./", PATH_MAX); // эту функцию нужно заточить под наш ЛС
+	return (fls);
 }
 
 static void		parse_set_flags(char *av)
@@ -82,7 +98,7 @@ static void		parse_set_flags(char *av)
 			shift = fl_R;
 		else
 			;
-			// exit(1);
+			// exit(1); // НЕ ЗАБЫТЬ РАССКОМЕНТИТЬ ПОТОМ
 		update_flags(shift);
 		av++;
 	}
@@ -110,28 +126,22 @@ static void		parse_check_flags(char ***splited_av)
 	}
 }
 
-void			parse_args(t_main *st, int ac, char *av[])
+t_file			*parse_args(int ac, char *av[])
 {
+	t_file		*fls;
 	char		***splited_av;
 
 	splited_av = av_split(ac, av);
 	if (!splited_av)
 		exit (1);
 	parse_check_flags(splited_av);
-	st->flag = update_flags(fl_noex);
-	st->args = update_args(splited_av);
+	fls = update_files(splited_av);
 
-	// av_print(splited_av);
-	// for (; st->args; st->args = st->args->next)
-	// {
-	// 	// printFileProperties(st->args->stat);
-	// 	if (S_ISREG(st->args->stat.st_mode))
-	// 		ft_printf("{blue}file{eoc}: ");
-	// 	else if (S_ISDIR(st->args->stat.st_mode))
-	// 		ft_printf("{red}directory{eoc}: ");
-	// 	else
-	// 		ft_printf("{blue}neizvestno{eoc}: ");
-	// 	ft_printf("{pink}%s\n{eoc}", st->args->name);
-	// }
+	/* check */
+	ft_printf("{blue}CHECK:{eoc}\n");
+	for (; fls; fls = fls->next)
+		ft_printf("{blue}%s\n{eoc}", fls->name);
+	
 	av_free(splited_av);
+	return (fls);
 }
