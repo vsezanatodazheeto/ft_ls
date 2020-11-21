@@ -52,12 +52,9 @@ static t_file	*update_files(char ***splited_av)
 				else
 				{
 					// КОСТЫЛИЩЕ ЕБАНОЕ, наверное небезопасно,
-					// как минимум нихуя не понятно
-					// потом объясню
-        			if (S_ISDIR(fls->stat.st_mode) && splited_av[i][j][ft_strlen(splited_av[i][j]) - 1] != CH_SLASH)
-						fls->name = ft_strjoin(splited_av[i][j], S_SLASH);
-					else
-						fls->name = ft_strdup(splited_av[i][j]);
+        			// if (S_ISDIR(fls->stat.st_mode) && splited_av[i][j][ft_strlen(splited_av[i][j]) - 1] == CH_SLASH)
+        				// splited_av[i][j][ft_strlen(splited_av[i][j]) - 1] = '\0';
+					fls->name = ft_strdup(splited_av[i][j]);
 				}
 			}
 		}
@@ -65,14 +62,14 @@ static t_file	*update_files(char ***splited_av)
 	if(!fls)
 	{
 		add_file(&fls);
-		fls->name = ft_strdup("./");
+		fls->name = ft_strdup(".");
 		if (lstat(fls->name, &fls->stat) < 0)
 		{
 			// не знаю, нужно ли тут это, в коем веке мы не можем узнать инфу о папке, в которой находимся
 			fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
 		}
 	}
-	ft_strncpy(fls->path, "./", PATH_MAX); // эту функцию нужно заточить под наш ЛС
+	// ft_strncpy(fls->path, "./", PATH_MAX); // эту функцию нужно заточить под наш ЛС
 	return (fls);
 }
 
@@ -137,10 +134,13 @@ t_file			*parse_args(int ac, char *av[])
 	parse_check_flags(splited_av);
 	fls = update_files(splited_av);
 
+	t_file *k;
+
+	k = fls;
 	/* check */
 	ft_printf("{blue}CHECK:{eoc}\n");
-	for (; fls; fls = fls->next)
-		ft_printf("{blue}%s\n{eoc}", fls->name);
+	for (; k; k = k->next)
+		ft_printf("{blue}%s\n{eoc}", k->name);
 	
 	av_free(splited_av);
 	return (fls);

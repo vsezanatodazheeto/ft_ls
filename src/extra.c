@@ -35,7 +35,7 @@ void printFileProperties(struct stat stats)
         printf("execute");
 
     // File size
-    printf("\nFile size: %ld", stats.st_size);
+    printf("\nFile size: %lld", stats.st_size);
 
     // Get file creation time in seconds and 
     // convert seconds to date and time format

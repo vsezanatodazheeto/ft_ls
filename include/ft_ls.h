@@ -6,7 +6,7 @@
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
-#include <linux/limits.h>
+#include <limits.h>
 
 #include "unistd.h"
 // ◦ write
@@ -22,11 +22,9 @@
 
 #include <sys/types.h>
 #include <pwd.h>
-// #include <uuid/uuid.h>
 // ◦ getpwuid // получают запись из файла паролей
 
 #include <grp.h>
-// #include <uuid/uuid.h>
 // ◦ getgrgid // получает записи файла групп
 
 #include <sys/xattr.h>
@@ -79,7 +77,7 @@ typedef enum		t_type
 typedef enum		t_err_file
 {
 	fe_noer,		//no errors
-	fe_noex,		// dile doesn't exist
+	fe_noex,		// file doesn't exist
 	fe_nopr			// no permissions
 }					e_err_file;
 
@@ -87,12 +85,12 @@ typedef enum		t_err_file
 typedef struct		s_file
 {
 	char			*name;
-	char			path[PATH_MAX];
 	struct stat 	stat;
 	e_err_file		fe_err;
 	struct s_file	*next;
 }					t_file;
 
+void        ft_ls(t_file *args, char *path);
 /* PARSER */
 t_file		*parse_args(int ac, char *av[]);
 int32_t		update_flags(const int8_t shift);

@@ -5,66 +5,102 @@ void        print_files(void)
     printf("PRINT FILES\n");
 }
 
-t_file		*print_dir_contains(t_file *arg)
+void		print_files_a(t_file *fls)
+{
+	for (; fls; fls = fls->next)
+		ft_printf("%s\n", fls->name);
+}
+
+void				print_dir_contains(t_file *d_fl, char *old_path)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	t_file			*new_args;
+	t_file			*fls;
+	char			new_path[PATH_MAX];
+	char			full_path[PATH_MAX + NAME_MAX];
+	
+	new_path[0] = '\0';
+	if (!old_path)
+	{
+		ft_strcat(new_path, d_fl->name);
+		ft_strcat(new_path, "/");
+	}
+	else
+	{
+		ft_strcat(new_path, old_path);
+		ft_strcat(new_path, "/");
+	}
 
-	dir = opendir(arg->name);
-	new_args = NULL;
+	ft_printf("{green}%s:\n{eoc}", new_path);
+
+
+	fls = NULL;
+	dir = opendir(new_path);
 	if (!dir)
 	{
-		ft_printf("{neon} could not open dir: %s\n{eoc}", arg->name);
+		ft_printf("{neon} could not open dir: %s\n{eoc}", new_path);
 		exit(1);
 	}
+
+
 	while ((entry = readdir(dir)))
 	{
-		ft_printf("%s\n", entry->d_name);
-		if (ft_strcmp(entry->d_name, ".") != 0 && ft_strcmp(entry->d_name, "..") != 0)
+		if ((ft_strcmp(entry->d_name, ".") != 0) && (ft_strcmp(entry->d_name, "..") != 0) && (entry->d_name[0] != '.'))
 		{
-			add_file(&new_args);
-			if (!(new_args->name = ft_strdup(entry->d_name)))
+			add_file(&fls);
+			if (!(fls->name = ft_strdup(entry->d_name)))
+			{
 				exit(1);
-			if (stat(new_args->path, &new_args->stat) < 0)
-				exit(2);
+			}
+			{
+				full_path[0] = '\0';
+				ft_strcat(full_path, new_path);
+				ft_strcat(full_path, "/");
+				ft_strcat(full_path, fls->name);
+			}
+			if (lstat(full_path, &fls->stat) < 0)
+				exit(200);
 		}
 	}
+	print_files_a(fls);
+	if (update_flags(-1) & 1 << fl_R)
+	{
+		for (; fls; fls = fls->next)
+			if (S_ISDIR(fls->stat.st_mode))
+			{
+				char gg_path[PATH_MAX + NAME_MAX];
+
+				gg_path[0] = '\0';
+				ft_strcat(gg_path, new_path);
+				ft_strcat(gg_path, fls->name);
+				// ft_printf("{orange}%s:\n{eoc}", gg_path);
+				ft_ls(fls, gg_path);
+			}
+	}
 	closedir(dir);
-	return (new_args);
 }
 
-void        ft_ls(t_file *args)
+void        ft_ls(t_file *fls, char *path)
 {
-    t_file  *cur;
-    t_file  *possible_new_args;
-
-    cur = args;
 	ft_printf("------------------------------------------------------------\n");
-    while(cur)
-    {
-        if (S_ISREG(cur->stat.st_mode) && !(update_flags(-1) & 1 << fl_R))
-            print_files();
-        else if (S_ISDIR(cur->stat.st_mode))
-        {
-			ft_printf("{pink}DIR: [%s]\n{eoc}", cur->name);
-            if (!(possible_new_args = print_dir_contains(cur)))
-				break ;
-            if(update_flags(-1) & 1 << fl_R)
-            {
-                ft_ls(possible_new_args);
-            }
-        }
-        cur = cur->next;
-    }
+	ft_printf("{pink}DIR: [%s]\n{eoc}", fls->name);
+	if (S_ISREG(fls->stat.st_mode) && !((update_flags(-1) & 1 << fl_R)))
+		print_files();
+	if (S_ISDIR(fls->stat.st_mode))
+	{
+		print_dir_contains(fls, path);
+	}
 }
 
-
-int			main(int ac, char *av[])
+int main(int ac, char *av[])
 {
 	t_file	*fls;
 
     fls = parse_args(ac, av);
-    // ft_ls(st->args);
+    while(fls)
+    {
+    	ft_ls(fls, NULL);
+        fls = fls->next;
+	}
 	return (0);
 }
