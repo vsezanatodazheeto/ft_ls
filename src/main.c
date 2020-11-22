@@ -5,10 +5,16 @@ void        print_files(void)
     printf("PRINT FILES\n");
 }
 
-void		print_files_a(t_file *fls)
+void				format_print_files(t_file *fls)
 {
 	for (; fls; fls = fls->next)
-		ft_printf("%s\n", fls->name);
+	{
+		// -a
+		if (update_flags(-1) & 1 << fl_a)
+			ft_printf("%s\n", fls->name);
+		else if ((fls->name[0] != '.'))
+			ft_printf("%s\n", fls->name);
+	}
 }
 
 void				set_new_path(t_file *d_fl, char *new_path, char *old_path)
@@ -44,29 +50,26 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 		ERR_OPD_NOEX;
 	while ((entry = readdir(dir)))
 	{
-		if ((ft_strcmp(entry->d_name, ".") != 0) && (ft_strcmp(entry->d_name, "..") != 0) && (entry->d_name[0] != '.'))
+		file_add(&fls);
+		if (!(fls->name = ft_strdup(entry->d_name)))
 		{
-			file_add(&fls);
-			if (!(fls->name = ft_strdup(entry->d_name)))
-			{
-				exit(1);
-			}
-			{
-				full_path[0] = '\0';
-				ft_strcat(full_path, new_path);
-				ft_strcat(full_path, "/");
-				ft_strcat(full_path, fls->name);
-			}
-			if (lstat(full_path, &fls->stat) < 0)
-				exit(200);
+			exit(1);
 		}
+		{
+			full_path[0] = '\0';
+			ft_strcat(full_path, new_path);
+			ft_strcat(full_path, "/");
+			ft_strcat(full_path, fls->name);
+		}
+		if (lstat(full_path, &fls->stat) < 0)
+			exit(200);
 	}
-	print_files_a(fls);
+	format_print_files(fls);
 	fls_copy = fls;
 	if (update_flags(-1) & 1 << fl_R)
 	{
 		for (; fls; fls = fls->next)
-			if (S_ISDIR(fls->stat.st_mode))
+			if (S_ISDIR(fls->stat.st_mode) && (ft_strcmp(fls->name, ".") != 0) && (ft_strcmp(fls->name, "..") != 0))
 			{
 				char gg_path[PATH_MAX + NAME_MAX];
 
@@ -82,14 +85,11 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 
 void        ft_ls(t_file *fls, char *path)
 {
-	ft_printf("------------------------------------------------------------\n");
-	ft_printf("{pink}DIR: [%s]\n{eoc}", fls->name);
+	ft_printf("\n");
 	if (S_ISREG(fls->stat.st_mode) && !((update_flags(-1) & 1 << fl_R)))
 		print_files();
 	if (S_ISDIR(fls->stat.st_mode))
-	{
 		print_dir_contains(fls, path);
-	}
 }
 
 int			main(int ac, char *av[])

@@ -17,7 +17,7 @@ L_RULE = $(addsuffix .lib, $(L_DIR))
 H_DIR = include/
 
 # HEADER NAME
-H_NAME = ft_ls
+H_NAME = ft_ls ft_ls_err
 H_NAME := $(addprefix $(H_DIR), $(addsuffix .h, $(H_NAME)))
 
 # PROGRAM NAME

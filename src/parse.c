@@ -101,14 +101,6 @@ t_file			*parse_args(int ac, char *av[])
 		exit (1);
 	parse_check_flags(splited_av);
 	fls = update_files(splited_av);
-
-	/* check */
-	t_file *k;
-	k = fls;
-	ft_printf("{blue}CHECK:{eoc}\n");
-	for (; k; k = k->next)
-		ft_printf("{blue}%s\n{eoc}", k->name);
-	
 	av_free(splited_av);
 	return (fls);
 }

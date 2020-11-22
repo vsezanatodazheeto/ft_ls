@@ -13,6 +13,7 @@
 
 /* nashi */
 #include <inttypes.h>
+#include "ft_ls_err.h"
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
