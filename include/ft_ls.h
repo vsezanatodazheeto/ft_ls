@@ -1,14 +1,22 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
+/*
+** PATH_MAX, NAME_MAX
+*/
+
+#if defined(__linux__)
+	#include <linux/limits.h>
+#elif defined(__APPLE__)
+	#include <limits.h>
+#endif
+
 /* nashi */
 #include <inttypes.h>
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
 
-#include <limits.h>
-// PATH_MAX, NAME_MAX
 
 #include "unistd.h"
 // ◦ write
@@ -60,6 +68,12 @@
 # define D_CURR "."
 # define D_BACK ".."
 
+# define ERR_MSG_OPD_NOEX "could not open dir\n"
+# define ERR_OPD_NOEX ({ft_fprintf(2, ERR_MSG_OPD_NOEX); return;})
+// # define ERROR_EXIT do{MSG1;finish(0);}while(0)
+// # define WRONG_SIZE ({MSG2;return;})
+// # define NO_ARG do{MSG3;exit(0);}while(0)
+
 // тип флага
 // A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.
 typedef enum		t_flags
@@ -101,6 +115,10 @@ t_file		*parse_args(int ac, char *av[]);
 int32_t		update_flags(const int8_t shift);
 void		add_file(t_file **fls);
 t_file		*create_file(void);
+
+/* T_FILE FUNC */
+void		file_add(t_file **fls);
+void		file_list_free(t_file **head);
 
 /* LIB PARSER */
 char		***av_split(int ac, char *av[]);

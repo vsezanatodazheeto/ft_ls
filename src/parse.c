@@ -8,29 +8,6 @@ int32_t			update_flags(const int8_t shift)
 	return (flags);
 }
 
-t_file			*create_file(void)
-{
-	t_file		*fl;
-
-	fl = (t_file *)malloc(sizeof(t_file));
-	if (!fl)
-		exit(1);
-	fl->name = NULL;
-	fl->fe_err = fe_noer;
-	fl->next = NULL;
-	return (fl);
-}
-
-void			add_file(t_file **fls)
-{
-	t_file		*new_fl;
-
-	new_fl = create_file();
-	if (*fls)
-		new_fl->next = *fls;
-	*fls = new_fl;
-}
-
 static t_file	*update_files(char ***splited_av)
 {
 	t_file		*fls;
@@ -42,7 +19,7 @@ static t_file	*update_files(char ***splited_av)
 		{
 			if (splited_av[i][j][0] != '-' && splited_av[i][j][0] != '\0')
 			{
-				add_file(&fls);
+				file_add(&fls);
 				if (lstat(splited_av[i][j], &fls->stat) < 0)
 					fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
@@ -52,7 +29,7 @@ static t_file	*update_files(char ***splited_av)
 	}
 	if(!fls)
 	{
-		add_file(&fls);
+		file_add(&fls);
 		fls->name = ft_strdup(D_CURR);
 		if (lstat(fls->name, &fls->stat) < 0)
 		{

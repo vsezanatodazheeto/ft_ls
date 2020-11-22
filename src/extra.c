@@ -1,5 +1,44 @@
 #include "ft_ls.h"
 
+void			file_list_free(t_file **head)
+{
+	t_file		*curr;
+
+	if (!head)
+		return ;
+	while (*head)
+	{
+		curr = *head;
+		*head = (*head)->next;
+		free(curr->name);
+		free(curr);
+		curr = NULL;
+	}
+}
+
+static t_file	*file_create(void)
+{
+	t_file		*fl;
+
+	fl = (t_file *)malloc(sizeof(t_file));
+	if (!fl)
+		exit(1);
+	fl->name = NULL;
+	fl->fe_err = fe_noer;
+	fl->next = NULL;
+	return (fl);
+}
+
+void			file_add(t_file **fls)
+{
+	t_file		*new_fl;
+
+	new_fl = file_create();
+	if (*fls)
+		new_fl->next = *fls;
+	*fls = new_fl;
+}
+
 // struct stat {
 //     dev_t         st_dev;      /* устройство */
 //     ino_t         st_ino;      /* inode */
@@ -21,31 +60,31 @@
 /**
  * Function to print file properties.
  */
-void printFileProperties(struct stat stats)
-{
-    struct tm dt;
+// void printFileProperties(struct stat stats)
+// {
+//     struct tm dt;
 
-    // File permissions
-    printf("\nFile access: ");
-    if (stats.st_mode & R_OK)
-        printf("read ");
-    if (stats.st_mode & W_OK)
-        printf("write ");
-    if (stats.st_mode & X_OK)
-        printf("execute");
+//     // File permissions
+//     printf("\nFile access: ");
+//     if (stats.st_mode & R_OK)
+//         printf("read ");
+//     if (stats.st_mode & W_OK)
+//         printf("write ");
+//     if (stats.st_mode & X_OK)
+//         printf("execute");
 
-    // File size
-    printf("\nFile size: %lld", stats.st_size);
+//     // File size
+//     printf("\nFile size: %ld", stats.st_size);
 
-    // Get file creation time in seconds and 
-    // convert seconds to date and time format
-    dt = *(gmtime(&stats.st_ctime));
-    printf("\nCreated on: %d-%d-%d %d:%d:%d", dt.tm_mday, dt.tm_mon, dt.tm_year + 1900, 
-                                              dt.tm_hour, dt.tm_min, dt.tm_sec);
+//     // Get file creation time in seconds and 
+//     // convert seconds to date and time format
+//     dt = *(gmtime(&stats.st_ctime));
+//     printf("\nCreated on: %d-%d-%d %d:%d:%d", dt.tm_mday, dt.tm_mon, dt.tm_year + 1900, 
+//                                               dt.tm_hour, dt.tm_min, dt.tm_sec);
 
-    // File modification time
-    dt = *(gmtime(&stats.st_mtime));
-    printf("\nModified on: %d-%d-%d %d:%d:%d", dt.tm_mday, dt.tm_mon, dt.tm_year + 1900, 
-                                              dt.tm_hour, dt.tm_min, dt.tm_sec);
+//     // File modification time
+//     dt = *(gmtime(&stats.st_mtime));
+//     printf("\nModified on: %d-%d-%d %d:%d:%d", dt.tm_mday, dt.tm_mon, dt.tm_year + 1900, 
+//                                               dt.tm_hour, dt.tm_min, dt.tm_sec);
 
-}
+// }

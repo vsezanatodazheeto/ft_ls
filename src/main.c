@@ -31,28 +31,22 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	DIR				*dir;
 	struct dirent	*entry;
 	t_file			*fls;
+	t_file			*fls_copy;
 	char			new_path[PATH_MAX];
 	char			full_path[PATH_MAX + NAME_MAX];
 	
 	set_new_path(d_fl, new_path, old_path);
-
 	ft_printf("{green}%s:\n{eoc}", new_path);
-
 	fls = NULL;
 	dir = opendir(new_path);
 
 	if (!dir)
-	{
-		ft_printf("{neon} could not open dir: %s\n{eoc}", new_path);
-		exit(1);
-	}
-
-
+		ERR_OPD_NOEX;
 	while ((entry = readdir(dir)))
 	{
 		if ((ft_strcmp(entry->d_name, ".") != 0) && (ft_strcmp(entry->d_name, "..") != 0) && (entry->d_name[0] != '.'))
 		{
-			add_file(&fls);
+			file_add(&fls);
 			if (!(fls->name = ft_strdup(entry->d_name)))
 			{
 				exit(1);
@@ -68,6 +62,7 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 		}
 	}
 	print_files_a(fls);
+	fls_copy = fls;
 	if (update_flags(-1) & 1 << fl_R)
 	{
 		for (; fls; fls = fls->next)
@@ -81,6 +76,7 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 				ft_ls(fls, gg_path);
 			}
 	}
+	file_list_free(&fls_copy);
 	closedir(dir);
 }
 
@@ -96,15 +92,18 @@ void        ft_ls(t_file *fls, char *path)
 	}
 }
 
-int main(int ac, char *av[])
+int			main(int ac, char *av[])
 {
 	t_file	*fls;
+	t_file	*fls_copy;
 
     fls = parse_args(ac, av);
+	fls_copy = fls;
     while(fls)
     {
     	ft_ls(fls, NULL);
         fls = fls->next;
 	}
+	file_list_free(&fls_copy);
 	return (0);
 }
