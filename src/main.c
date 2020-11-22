@@ -1,3 +1,163 @@
+// char f_type(mode_t mode)
+// {
+//     char c;
+//     switch (mode & S_IFMT)
+//     {
+//     case S_IFBLK:
+//         c = 'b';
+//         break;
+//     case S_IFCHR:
+//         c = 'c';
+//         break;
+//     case S_IFDIR:
+//         c = 'd';
+//         break;
+//     case S_IFIFO:
+//         c = 'p';
+//         break;
+//     case S_IFLNK:
+//         c = 'l';
+//         break;
+//     case S_IFREG:
+//         c = '-';
+//         break;
+//     case S_IFSOCK:
+//         c = 's';
+//         break;
+//     default:
+//         c = '?';
+//         break;
+//     }
+//     return (c);
+// }
+// // -l flag is here
+// void				print_files(t_file *fls)
+// {
+// 	struct group	*grp;
+// 	// if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
+// 	// 	printf(" %-8.8s", grp->gr_name);
+// 	// else
+// 	// 	ft_printf("{red} %-8d{eoc}", fls->stat.st_gid);
+// 	if (update_flags(-1) & 1 << fl_l)
+// 	{
+// 		// permissons
+// 		ft_printf("%c", f_type(fls->stat.st_mode));
+// 		ft_printf("---------  ");
+// 		// count of links
+// 		// author
+// 		// group
+// 		if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
+// 			ft_printf("%-8.8s ", grp->gr_name);
+// 		else
+// 			ft_printf("%-8d ", fls->stat.st_gid);
+// 		// size
+// 		//month
+// 		//day
+		
+// 		//time
+// 		//name
+// 		ft_printf("%s\n", fls->name);
+// 	}
+// 	else
+// 		ft_printf("%s\n", fls->name);
+// }
+// void				format_print_files(t_file *fls)
+// {
+// 	for (; fls; fls = fls->next)
+// 	{
+// 		// -a
+// 		if (update_flags(-1) & 1 << fl_a)
+// 		{
+// 			print_files(fls);
+// 			// ft_printf("\n");
+// 		}
+// 		else if ((fls->name[0] != '.'))
+// 		{
+// 			print_files(fls);
+// 			// ft_printf("\n");
+// 		}
+// 	}
+// }char f_type(mode_t mode)
+// {
+//     char c;
+//     switch (mode & S_IFMT)
+//     {
+//     case S_IFBLK:
+//         c = 'b';
+//         break;
+//     case S_IFCHR:
+//         c = 'c';
+//         break;
+//     case S_IFDIR:
+//         c = 'd';
+//         break;
+//     case S_IFIFO:
+//         c = 'p';
+//         break;
+//     case S_IFLNK:
+//         c = 'l';
+//         break;
+//     case S_IFREG:
+//         c = '-';
+//         break;
+//     case S_IFSOCK:
+//         c = 's';
+//         break;
+//     default:
+//         c = '?';
+//         break;
+//     }
+//     return (c);
+// }
+// // -l flag is here
+// void				print_files(t_file *fls)
+// {
+// 	struct group	*grp;
+// 	// if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
+// 	// 	printf(" %-8.8s", grp->gr_name);
+// 	// else
+// 	// 	ft_printf("{red} %-8d{eoc}", fls->stat.st_gid);
+// 	if (update_flags(-1) & 1 << fl_l)
+// 	{
+// 		// permissons
+// 		ft_printf("%c", f_type(fls->stat.st_mode));
+// 		ft_printf("---------  ");
+// 		// count of links
+// 		// author
+// 		// group
+// 		if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
+// 			ft_printf("%-8.8s ", grp->gr_name);
+// 		else
+// 			ft_printf("%-8d ", fls->stat.st_gid);
+// 		// size
+// 		//month
+// 		//day
+		
+// 		//time
+// 		//name
+// 		ft_printf("%s\n", fls->name);
+// 	}
+// 	else
+// 		ft_printf("%s\n", fls->name);
+// }
+// void				format_print_files(t_file *fls)
+// {
+// 	for (; fls; fls = fls->next)
+// 	{
+// 		// -a
+// 		if (update_flags(-1) & 1 << fl_a)
+// 		{
+// 			print_files(fls);
+// 			// ft_printf("\n");
+// 		}
+// 		else if ((fls->name[0] != '.'))
+// 		{
+// 			print_files(fls);
+// 			// ft_printf("\n");
+// 		}
+// 	}
+// }
+
 #include "ft_ls.h"
 
 int		asc_sort(t_file *f1, t_file *f2)
@@ -17,7 +177,6 @@ t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))
 
 	while (l1 && l2)
 	{
-		// if (l1->name < l2->name)
 		if (f_ptr(l1, l2))
 		{
 			p->next = l1;
