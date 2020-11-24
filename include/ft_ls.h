@@ -127,10 +127,7 @@ typedef struct		s_format_output
 void        ft_ls(t_file *args, char *path);
 
 /* SORT OF LINKED LIST BY FLAGS */
-t_file* merge_Sort(t_file* head, int (*f_ptr)(t_file *, t_file *));
-t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *));
-int		desc_sort(t_file *f1, t_file *f2);
-int		asc_sort(t_file *f1, t_file *f2);
+t_file* merge_Sort(t_file* head);
 
 /* FORMAT OUTPUT */
 void				format_print_files(t_file *fls, uint64_t total);

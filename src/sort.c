@@ -1,16 +1,21 @@
 #include "ft_ls.h"
 
-int		asc_sort(t_file *f1, t_file *f2)
+static int		asc_sort(t_file *f1, t_file *f2)
 {
 	return(ft_strcmp(f2->name, f1->name));
 }
 
-int		desc_sort(t_file *f1, t_file *f2)
+static int		desc_sort(t_file *f1, t_file *f2)
 {
 	return(ft_strcmp(f1->name, f2->name));
 }
 
-t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))
+static int		time_sort(t_file *f1, t_file *f2)
+{
+	return(ctime(&f1->stat.st_mtime) > ctime(&f2->stat.st_mtime));
+}
+
+static t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))
 {
 	t_file dummy[1];
 	t_file* p = dummy;
@@ -38,10 +43,19 @@ t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))
 	return dummy->next;
 }
 
-t_file* merge_Sort(t_file* head, int (*f_ptr)(t_file *, t_file *))
+t_file* merge_Sort(t_file* head)
 {
 
 	/* terminating condition */
+
+	int (*f_ptr)(t_file *, t_file *);
+
+	if (update_flags(-1) & 1 << fl_r)
+		f_ptr = desc_sort;
+	else if (update_flags(-1) & 1 << fl_t)
+		f_ptr = time_sort;
+	else
+		f_ptr = asc_sort;
 
 	if (head == NULL || head->next == NULL)
 		return head;
@@ -60,8 +74,8 @@ t_file* merge_Sort(t_file* head, int (*f_ptr)(t_file *, t_file *))
 	/* split the list int two half */
 	prev->next = NULL;
 
-	t_file* l1 = merge_Sort(head, f_ptr);
-	t_file* l2 = merge_Sort(slowPtr, f_ptr);
+	t_file* l1 = merge_Sort(head);
+	t_file* l2 = merge_Sort(slowPtr);
 
 	return merge(l1, l2, f_ptr);
 }

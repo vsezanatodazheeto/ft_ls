@@ -58,7 +58,7 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 			format_output_set(&fls->stat);
 		}
 	}
-	fls = merge_Sort(fls, asc_sort);
+	fls = merge_Sort(fls);
 	format_print_files(fls, total);
 	fls_copy = fls;
 	if (update_flags(-1) & 1 << fl_R)
