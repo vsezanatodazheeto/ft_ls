@@ -2,12 +2,12 @@
 
 int		asc_sort(t_file *f1, t_file *f2)
 {
-	return(f1->name < f2->name);
+	return(ft_strcmp(f2->name, f1->name));
 }
 
 int		desc_sort(t_file *f1, t_file *f2)
 {
-	return(f1->name > f2->name);
+	return(ft_strcmp(f1->name, f2->name));
 }
 
 t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))
@@ -17,7 +17,7 @@ t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))
 
 	while (l1 && l2)
 	{
-		if (f_ptr(l1, l2))
+		if (f_ptr(l1, l2) > 0)
 		{
 			p->next = l1;
 			l1 = l1->next;

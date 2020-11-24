@@ -21,6 +21,7 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	struct dirent	*entry;
 	t_file			*fls;
 	t_file			*fls_copy;
+	uint64_t		total;
 	char			new_path[PATH_MAX];
 	char			full_path[PATH_MAX + NAME_MAX];
 	// int				(*f_ptr)(t_file *, t_file *);
@@ -29,6 +30,7 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	ft_printf("{green}%s:\n{eoc}", new_path);
 	fls = NULL;
 	dir = opendir(new_path);
+	total = 0;
 
 	if (!dir)
 		ERR_OPD_NOEX;
@@ -47,8 +49,17 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 		}
 		if (lstat(full_path, &fls->stat) < 0)
 			exit(200);
+		else
+		{
+			if ((update_flags(-1) & 1 << fl_a))
+				total += fls->stat.st_blocks;
+			else if (fls->name[0] != '.')
+				total += fls->stat.st_blocks;
+			format_output_set(&fls->stat);
+		}
 	}
-	format_print_files(fls);
+	fls = merge_Sort(fls, asc_sort);
+	format_print_files(fls, total);
 	fls_copy = fls;
 	if (update_flags(-1) & 1 << fl_R)
 	{

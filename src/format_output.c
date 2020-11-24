@@ -1,12 +1,70 @@
 #include "ft_ls.h"
 
-void		foo(void)
-{
-	static t_format_mlen mlen = {
-		0, NULL, NULL, 0
-	};
+// typedef struct		s_format_mlen
+// {
+// 	uint64_t		s_links;
+// 	uint64_t		s_user;
+// 	uint64_t		s_group;
+// 	uint64_t		s_bytes;
+// }					t_format_mlen
 
-	return ;
+uint64_t			fo_get(int i)
+{
+	t_format_output	*f_out;
+
+	f_out = format_output_set(NULL);
+	if (i == 1)
+	{
+		// ft_printf("{blue}%ld\n{eoc}", f_out->s_links);
+		return (f_out->s_links);
+	}
+	else if (i == 2)
+	{
+		// ft_printf("{blue}%ld\n{eoc}", f_out->s_user);
+		return (f_out->s_user);
+	}
+	else if (i == 3)
+	{
+		// ft_printf("{blue}%ld\n{eoc}", f_out->s_group);
+		return (f_out->s_group);
+	}
+	else if (i == 4)
+	{
+		// ft_printf("{blue}%ld\n{eoc}", f_out->s_size);
+		return (f_out->s_size);
+	}
+	return (0);
+}
+
+t_format_output		*format_output_set(const struct stat *stat)
+{
+	static t_format_output	f_out = {0, 0, 0, 0};
+	t_format_output			temp;
+	struct group			*grp;
+	struct passwd			*pw;
+
+	if (!stat)
+		return (&f_out);
+	temp.s_links = ft_numlen(stat->st_nlink, 10);
+	if ((pw = getpwuid(stat->st_uid)))
+		temp.s_user = ft_strlen(pw->pw_name);
+	else
+		temp.s_user = ft_numlen(stat->st_gid, 10);
+	if ((grp = getgrgid(stat->st_gid)))
+		temp.s_group = ft_strlen(grp->gr_name);
+	else
+		temp.s_group = ft_numlen(stat->st_gid, 10);
+	temp.s_size = ft_numlen(stat->st_size, 10);
+
+	if (temp.s_links > f_out.s_links)
+		f_out.s_links = temp.s_links;
+	if (temp.s_user > f_out.s_user)
+		f_out.s_user = temp.s_user;
+	if (temp.s_group > f_out.s_group)
+		f_out.s_group = temp.s_group;
+	if (temp.s_size > f_out.s_size)
+		f_out.s_size = temp.s_size;
+	return (&f_out);
 }
 
 static char	f_type(mode_t mode)
@@ -73,22 +131,22 @@ void		print_files(t_file *fls)
 		ft_printf("%s ", f_permissions(fls->stat.st_mode));
 
 		// count of links
-		ft_printf("%d ", fls->stat.st_nlink);
+		ft_printf("%*d ", fo_get(1), fls->stat.st_nlink);
 
-		// author
+		// user
 		if ((pw = getpwuid(fls->stat.st_uid)))
-			ft_printf("%s ", pw->pw_name);
+			ft_printf("%*s  ", fo_get(2), pw->pw_name);
 		else
-			ft_printf("%d ", fls->stat.st_gid);
+			ft_printf("%*d ", fo_get(2), fls->stat.st_gid);
 
 		// group
 		if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
-			ft_printf("%s ", grp->gr_name);
+			ft_printf("%*s  ", fo_get(3), grp->gr_name);
 		else
-			ft_printf("%d ", fls->stat.st_gid);
+			ft_printf("%*d ", fo_get(3), fls->stat.st_gid);
 
 		// size
-		ft_printf("%d ", fls->stat.st_size);
+		ft_printf("%*d ", fo_get(4), fls->stat.st_size);
 
 		//time
 		// ЕБУЧЕЕ КОСТЫЛИЩЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕ БЛЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯЯТЬ
@@ -97,8 +155,10 @@ void		print_files(t_file *fls)
 	ft_printf("%s\n", fls->name);
 }
 
-void		format_print_files(t_file *fls)
+void		format_print_files(t_file *fls, uint64_t total)
 {
+	if (update_flags(-1) & 1 << fl_l)
+		ft_printf("total %u\n", total);
 	for (; fls; fls = fls->next)
 	{
 		// -a

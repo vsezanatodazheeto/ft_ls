@@ -22,6 +22,8 @@ static t_file	*update_files(char ***splited_av)
 				file_add(&fls);
 				if (lstat(splited_av[i][j], &fls->stat) < 0)
 					fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
+				else
+					format_output_set(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
 					exit(1);
 			}

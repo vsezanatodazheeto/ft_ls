@@ -115,13 +115,13 @@ typedef struct		s_file
 	struct s_file	*next;
 }					t_file;
 
-typedef struct		s_format_mlen
+typedef struct		s_format_output
 {
-	int				links;
-	char			*user;
-	char			*group;
-	int				size;
-}					t_format_mlen;
+	uint64_t		s_links;
+	uint64_t		s_user;
+	uint64_t		s_group;
+	uint64_t		s_size;
+}					t_format_output;
 
 /* MAIN FUCTIONS */
 void        ft_ls(t_file *args, char *path);
@@ -133,7 +133,8 @@ int		desc_sort(t_file *f1, t_file *f2);
 int		asc_sort(t_file *f1, t_file *f2);
 
 /* FORMAT OUTPUT */
-void				format_print_files(t_file *fls);
+void				format_print_files(t_file *fls, uint64_t total);
+t_format_output		*format_output_set(const struct stat *stat);
 
 /* PARSER */
 t_file		*parse_args(int ac, char *av[]);
