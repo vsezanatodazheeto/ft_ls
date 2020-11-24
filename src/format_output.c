@@ -1,24 +1,31 @@
 #include "ft_ls.h"
 
+void		foo(void)
+{
+	static t_file file = {NULL, 0, 0, NULL};
+
+	return ;
+}
+
 static char	f_type(mode_t mode)
 {
     char	c;
 	mode_t	type;
 
-	type = mode & __S_IFMT;
-	if (type == __S_IFBLK)
+	type = mode & S_IFMT;
+	if (type == S_IFBLK)
         c = 'b';
-	else if (type == __S_IFCHR)
+	else if (type == S_IFCHR)
         c = 'c';
-	else if (type == __S_IFDIR)
+	else if (type == S_IFDIR)
         c = 'd';
-	else if (type == __S_IFIFO)
+	else if (type == S_IFIFO)
         c = 'p';
-	else if (type == __S_IFLNK)
+	else if (type == S_IFLNK)
         c = 'l';
-	else if (type == __S_IFREG)
+	else if (type == S_IFREG)
         c = '-';
-	else if (type == __S_IFSOCK)
+	else if (type == S_IFSOCK)
         c = 's';
 	else
 		c = '?';
@@ -34,11 +41,11 @@ static char	*f_permissions(mode_t mode)
 	strcpy(&bits[1], rwx[(mode >> 6)& 7]);
     strcpy(&bits[4], rwx[(mode >> 3)& 7]);
     strcpy(&bits[7], rwx[(mode & 7)]);
-	if (mode & __S_ISUID)
+	if (mode & S_ISUID)
         bits[3] = (mode & S_IXUSR) ? 's' : 'S';
-    if (mode & __S_ISGID)
+    if (mode & S_ISGID)
         bits[6] = (mode & S_IXGRP) ? 's' : 'l';
-    if (mode & __S_ISVTX)
+    if (mode & S_ISVTX)
         bits[9] = (mode & S_IXOTH) ? 't' : 'T';
     bits[10] = '\0';
     return(bits);
