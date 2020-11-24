@@ -5,6 +5,11 @@
 ** PATH_MAX, NAME_MAX
 */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+
 #if defined(__linux__)
 	#include <linux/limits.h>
 #elif defined(__APPLE__)
@@ -110,7 +115,18 @@ typedef struct		s_file
 	struct s_file	*next;
 }					t_file;
 
+/* MAIN FUCTIONS */
 void        ft_ls(t_file *args, char *path);
+
+/* SORT OF LINKED LIST BY FLAGS */
+t_file* merge_Sort(t_file* head, int (*f_ptr)(t_file *, t_file *));
+t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *));
+int		desc_sort(t_file *f1, t_file *f2);
+int		asc_sort(t_file *f1, t_file *f2);
+
+/* FORMAT OUTPUT */
+void				format_print_files(t_file *fls);
+
 /* PARSER */
 t_file		*parse_args(int ac, char *av[]);
 int32_t		update_flags(const int8_t shift);
@@ -130,3 +146,6 @@ void		av_print(char ***splited_av);
 void printFileProperties(struct stat stats);
 
 #endif
+
+// chgrp - изменить группу для файлов или директорий
+// chown - владелец
