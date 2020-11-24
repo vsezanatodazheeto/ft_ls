@@ -6,7 +6,7 @@ EOC = "\e[0m"
 
 # COMPILER SETTINGS
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -g
+# CFLAGS = -Wall -Wextra -Werror -g
 
 # LIB (LIBFT, GET_NEXT_LINE, PRINTF)
 L_DIR = lib/

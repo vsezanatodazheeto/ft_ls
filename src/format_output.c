@@ -2,7 +2,9 @@
 
 void		foo(void)
 {
-	static t_file file = {NULL, 0, 0, NULL};
+	static t_format_mlen mlen = {
+		0, NULL, NULL, 0
+	};
 
 	return ;
 }

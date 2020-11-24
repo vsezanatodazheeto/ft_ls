@@ -115,6 +115,14 @@ typedef struct		s_file
 	struct s_file	*next;
 }					t_file;
 
+typedef struct		s_format_mlen
+{
+	int				links;
+	char			*user;
+	char			*group;
+	int				size;
+}					t_format_mlen;
+
 /* MAIN FUCTIONS */
 void        ft_ls(t_file *args, char *path);
 
