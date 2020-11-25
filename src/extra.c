@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 20:54:58 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/25 20:54:59 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/25 23:57:43 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,27 @@ void			file_list_free(t_file **head)
 
 static t_file	*file_create(void)
 {
-	t_file		*fl;
+	t_file		*f;
 
-	fl = (t_file *)malloc(sizeof(t_file));
-	if (!fl)
+	f = (t_file *)malloc(sizeof(t_file));
+	if (!f)
 		ERR_FCREATE;
-	fl->name = NULL;
-	fl->fe_err = fe_noer;
-	fl->next = NULL;
-	fl->prev = NULL;
-	return (fl);
+	f->name = NULL;
+	f->is_ex = fi_def;
+	f->next = NULL;
+	f->prev = NULL;
+	return (f);
 }
 
 void			file_add(t_file **fls)
 {
-	t_file		*new_fl;
+	t_file		*f;
 
-	new_fl = file_create();
+	f = file_create();
 	if (*fls)
 	{
-		(*fls)->prev = new_fl;
-		new_fl->next = *fls;
+		(*fls)->prev = f;
+		f->next = *fls;
 	}
-	*fls = new_fl;
+	*fls = f;
 }
