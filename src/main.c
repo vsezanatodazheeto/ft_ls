@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
+/*   Updated: 2020/11/25 22:32:33 by yshawn           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 void				set_new_path(t_file *d_fl, char *new_path, char *old_path)
@@ -24,14 +36,14 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	uint64_t		total;
 	char			new_path[PATH_MAX];
 	char			full_path[PATH_MAX + NAME_MAX];
-	// int				(*f_ptr)(t_file *, t_file *);
+	static int i = 0;
 
 	set_new_path(d_fl, new_path, old_path);
-	ft_printf("{green}%s:\n{eoc}", new_path);
 	fls = NULL;
+	if (!ISFLAG(fl_a) && d_fl->name[0] == '.' && d_fl->name[1])
+		return ;
 	dir = opendir(new_path);
 	total = 0;
-
 	if (!dir)
 		ERR_OPD;
 	while ((entry = readdir(dir)))
@@ -51,17 +63,27 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 			exit(200);
 		else
 		{
-			if ((update_flags(-1) & 1 << fl_a))
+			if (ISFLAG(fl_a))
+			{
 				total += fls->stat.st_blocks;
+				set_format_attb(&fls->stat);
+
+			}
 			else if (fls->name[0] != '.')
+			{
 				total += fls->stat.st_blocks;
-			format_output_set(&fls->stat);
+				set_format_attb(&fls->stat);
+			}
 		}
 	}
-	fls = merge_Sort(fls);
-	format_print_files(fls, total);
+	// fls = merge_Sort(fls);
+	if (i++)
+		ft_printf("\n");
+	if (d_fl->next || d_fl->prev)
+		ft_printf("%s:\n", new_path);
+	format_output_print(fls, total);
 	fls_copy = fls;
-	if (update_flags(-1) & 1 << fl_R)
+	if (ISFLAG(fl_R))
 	{
 		for (; fls; fls = fls->next)
 			if (S_ISDIR(fls->stat.st_mode) && (ft_strcmp(fls->name, ".") != 0) && (ft_strcmp(fls->name, "..") != 0))
@@ -80,9 +102,8 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 
 void		ft_ls(t_file *fls, char *path)
 {
-	if (S_ISREG(fls->stat.st_mode) && !((update_flags(-1) & 1 << fl_R)))
-		;
-		// print_files(NULL);
+	if (S_ISREG(fls->stat.st_mode) && !ISFLAG(fl_R))
+		format_file_print(fls);
 	if (S_ISDIR(fls->stat.st_mode))
 		print_dir_contains(fls, path);
 }
@@ -93,6 +114,7 @@ int			main(int ac, char *av[])
 	t_file	*fls_copy;
 
     fls = parse_args(ac, av);
+	// fls = merge_Sort(fls);
 	fls_copy = fls;
     while(fls)
     {

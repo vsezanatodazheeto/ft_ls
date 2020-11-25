@@ -17,7 +17,7 @@ L_RULE = $(addsuffix .lib, $(L_DIR))
 H_DIR = include/
 
 # HEADER NAME
-H_NAME = ft_ls ft_ls_err
+H_NAME = ft_ls ft_ls_flags ft_ls_err
 H_NAME := $(addprefix $(H_DIR), $(addsuffix .h, $(H_NAME)))
 
 # PROGRAM NAME
@@ -27,7 +27,13 @@ PROG_NAME = a.out
 PROG_DIR := src/
 
 # PROGRAM SRCS
-PROG_SRC = main av_parse parse extra sort format_output
+PROG_SRC = main \
+			av_parse \
+			parse \
+			flags \
+			extra \
+			sort \
+			format_out
 PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 
 # FILE PATH TO LIB, PROGRAM SRC/OBJ FILES
