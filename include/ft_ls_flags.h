@@ -3,11 +3,14 @@
 
 #include <inttypes.h>
 
-// тип флага
-// A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.
+/*
+** there is english alphabet for you:
+** A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.
+** file type
+*/
 typedef enum		t_flags
 {
-	fl_noex = -1,
+	fl_def = -1,
 	fl_a,
 	fl_l,
 	fl_r,

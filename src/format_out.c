@@ -6,11 +6,13 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/25 21:59:42 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/26 00:34:59 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+extern int i;
 
 static int32_t		get_format_attb(t_format_type_attb attb)
 {
@@ -125,6 +127,7 @@ void			format_file_print(t_file *fls)
 		ft_printf("%.12s ", ctime(&fls->stat.st_mtime) + 4);
 	}
 	ft_printf("%s\n", fls->name);
+	i++;
 }
 
 void			format_output_print(t_file *fls, uint64_t total)

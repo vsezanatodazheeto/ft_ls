@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/25 21:37:51 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/26 00:21:16 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@ static t_file	*update_files(char ***splited_av)
 			if (splited_av[i][j][0] != '-' && splited_av[i][j][0] != '\0')
 			{
 				file_add(&fls);
-				if (lstat(splited_av[i][j], &fls->stat) < 0)
-					fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
+				if (stat(splited_av[i][j], &fls->stat) < 0)
+				{
+					ERR_STATF(splited_av[i][j]);
+					fls->is_ex = fi_noex;
+				}
 				else
 					set_format_attb(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
@@ -41,7 +44,8 @@ static t_file	*update_files(char ***splited_av)
 		if (lstat(fls->name, &fls->stat) < 0)
 		{
 			// не знаю, нужно ли тут это, в коем веке мы не можем узнать инфу о папке, в которой находимся
-			fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
+			ERR_STATF(fls->name);
+			fls->is_ex = fi_noex;
 		}
 	}
 	return (fls);
@@ -58,7 +62,7 @@ static void		parse_set_flags(char *av)
 	if (!av)
 		return ;
 	av++;
-	shift = fl_noex;
+	shift = fl_def;
 	while (*av)
 	{
 		if (*av == 'a')

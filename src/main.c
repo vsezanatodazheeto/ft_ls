@@ -6,11 +6,13 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/25 22:32:33 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/26 00:35:27 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+int i = 0;
 
 void				set_new_path(t_file *d_fl, char *new_path, char *old_path)
 {
@@ -18,12 +20,12 @@ void				set_new_path(t_file *d_fl, char *new_path, char *old_path)
 	if (old_path)
 	{
 		ft_strcat(new_path, old_path);
-		ft_strcat(new_path, "/");
+		// ft_strcat(new_path, "/");
 	}
 	else
 	{
 		ft_strcat(new_path, d_fl->name);
-		ft_strcat(new_path, "/");
+		// ft_strcat(new_path, "/");
 	}
 }
 
@@ -36,16 +38,20 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	uint64_t		total;
 	char			new_path[PATH_MAX];
 	char			full_path[PATH_MAX + NAME_MAX];
-	static int i = 0;
 
 	set_new_path(d_fl, new_path, old_path);
 	fls = NULL;
 	if (!ISFLAG(fl_a) && d_fl->name[0] == '.' && d_fl->name[1])
 		return ;
 	dir = opendir(new_path);
-	total = 0;
 	if (!dir)
-		ERR_OPD;
+		ERR_OPEND(new_path);
+	total = 0;
+	if (i)
+		ft_printf("\n");
+	if (d_fl->next || d_fl->prev)
+		ft_printf("%s:\n", new_path);
+	ft_strcat(new_path, "/");
 	while ((entry = readdir(dir)))
 	{
 		file_add(&fls);
@@ -60,7 +66,10 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 			ft_strcat(full_path, fls->name);
 		}
 		if (lstat(full_path, &fls->stat) < 0)
-			exit(200);
+		{
+			ERR_STATF(fls->name);
+			fls->is_ex = fi_noex;
+		}
 		else
 		{
 			if (ISFLAG(fl_a))
@@ -76,11 +85,11 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 			}
 		}
 	}
-	// fls = merge_Sort(fls);
-	if (i++)
-		ft_printf("\n");
-	if (d_fl->next || d_fl->prev)
-		ft_printf("%s:\n", new_path);
+	merge_Sort2(&fls);
+	// if (i++)
+	// 	ft_printf("\n");
+	// if (d_fl->next || d_fl->prev)
+	// 	ft_printf("%s:\n", new_path);
 	format_output_print(fls, total);
 	fls_copy = fls;
 	if (ISFLAG(fl_R))
@@ -114,7 +123,7 @@ int			main(int ac, char *av[])
 	t_file	*fls_copy;
 
     fls = parse_args(ac, av);
-	// fls = merge_Sort(fls);
+	merge_Sort2(&fls);
 	fls_copy = fls;
     while(fls)
     {

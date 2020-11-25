@@ -72,12 +72,15 @@ typedef struct		s_format_out
 	int32_t			s_size;
 }					t_format_out;
 
-typedef enum		t_err_file
+/*
+** for t_file struct:
+** is file exist
+*/
+typedef enum		e_file_exist
 {
-	fe_noer,		//no errors
-	fe_noex,		// file doesn't exist
-	fe_nopr			// no permissions
-}					e_err_file;
+	fi_def,
+	fi_noex,
+}					t_file_exist;
 
 /*
 ** main stuff
@@ -86,7 +89,7 @@ typedef struct		s_file
 {
 	char			*name;
 	struct stat 	stat;
-	e_err_file		fe_err;
+	t_file_exist	is_ex;
 	struct s_file	*next;
 	struct s_file	*prev;
 }					t_file;
@@ -95,7 +98,7 @@ typedef struct		s_file
 void        		ft_ls(t_file *args, char *path);
 
 /* SORT OF LINKED LIST BY FLAGS */
-t_file*				merge_Sort(t_file* head);
+void				merge_Sort2(t_file **head);
 
 /* FORMAT OUTPUT */
 t_format_out		*set_format_attb(const struct stat *stat);
