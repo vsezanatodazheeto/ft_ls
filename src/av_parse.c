@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 20:39:17 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/25 22:04:47 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/25 22:12:26 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ void		av_free(char ***splited_av)
 {
 	int32_t	i;
 
+	i = 0;
 	while (splited_av[i])
 	{
 		ft_arrdel((void ***)&splited_av[i]);
 		i++;
 	}
-	ft_arrdel((void ***)&splited_av[i]);
 	free(splited_av);
 }
 
