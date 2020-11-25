@@ -1,12 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
+/*   Updated: 2020/11/25 21:37:51 by yshawn           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
-
-int32_t			update_flags(const int8_t shift)
-{
-	static int32_t flags = 0;
-
-	flags = flags | 1 << shift;
-	return (flags);
-}
 
 static t_file	*update_files(char ***splited_av)
 {
@@ -23,7 +27,7 @@ static t_file	*update_files(char ***splited_av)
 				if (lstat(splited_av[i][j], &fls->stat) < 0)
 					fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
 				else
-					format_output_set(&fls->stat);
+					set_format_attb(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
 					ERR_STRDUP;
 			}
@@ -32,7 +36,8 @@ static t_file	*update_files(char ***splited_av)
 	if(!fls)
 	{
 		file_add(&fls);
-		fls->name = ft_strdup(D_CURR);
+		if (!(fls->name = ft_strdup(D_CURR)))
+			ERR_STRDUP;
 		if (lstat(fls->name, &fls->stat) < 0)
 		{
 			// не знаю, нужно ли тут это, в коем веке мы не можем узнать инфу о папке, в которой находимся
@@ -43,7 +48,7 @@ static t_file	*update_files(char ***splited_av)
 }
 
 /*
-** get on
+** accept at the entrance char * that starts from "-...""
 */
 
 static void		parse_set_flags(char *av)
@@ -52,7 +57,7 @@ static void		parse_set_flags(char *av)
 
 	if (!av)
 		return ;
-	av++; //skip - (minus)
+	av++;
 	shift = fl_noex;
 	while (*av)
 	{
@@ -67,8 +72,7 @@ static void		parse_set_flags(char *av)
 		else if (*av == 'R')
 			shift = fl_R;
 		else
-			;
-			// exit(1); // НЕ ЗАБЫТЬ РАССКОМЕНТИТЬ ПОТОМ
+			ERR_LSFLAG(*av);
 		update_flags(shift);
 		av++;
 	}

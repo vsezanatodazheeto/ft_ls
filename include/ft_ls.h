@@ -1,15 +1,6 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
-/*
-** PATH_MAX, NAME_MAX
-*/
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-
 #if defined(__linux__)
 	#include <linux/limits.h>
 #elif defined(__APPLE__)
@@ -18,67 +9,68 @@
 
 /* nashi */
 #include <inttypes.h>
+#include "ft_ls_flags.h"
 #include "ft_ls_err.h"
 #include "../lib/include/libft.h"
 #include "../lib/include/get_next_line.h"
 #include "../lib/include/ft_printf.h"
 
-
 #include "unistd.h"
-// ◦ write
+#include <time.h>
+#include <stdlib.h>
+#include <stdlib.h>
 
+/*
+** opendir, readdir, closedir
+*/
 #include <dirent.h>
-// ◦ opendir
-// ◦ readdir
-// ◦ closedir
 
+/*
+** stat, lstat
+*/
 #include <sys/stat.h>
-// ◦ stat
-// ◦ lstat
 
+/*
+** getpwuid - users
+*/
 #include <sys/types.h>
 #include <pwd.h>
-// ◦ getpwuid // получают запись из файла паролей
 
+/*
+** getgrgid - groups
+*/
 #include <grp.h>
-// ◦ getgrgid // получает записи файла групп
 
-#include <sys/xattr.h>
 // ◦ listxattr // выводит список названий расширенных атрибутов  
 // ◦ getxattr // получает расширенное значение атрибутов
+#include <sys/xattr.h>
 
-#include <time.h>
-// ◦ time
-// ◦ ctime
-
-#include "unistd.h"
-// ◦ readlink
-
-#include <stdlib.h>
-// ◦ malloc
-// ◦ free
-
-#include <stdlib.h>
-// ◦ exit
-
-// тип флага
-// A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z.
-typedef enum		t_flags
+/*
+** for format output [-l] flag, types of max lengths of:
+** 
+** link (num)
+** user (str)
+** group (str)
+** size (num)
+*/
+typedef enum		e_format_type_attb
 {
-	fl_noex = -1,
-	fl_a,
-	fl_l,
-	fl_r,
-	fl_t,
-	fl_R
-}					e_flags;
+	fta_l,
+	fta_u,
+	fta_g,
+	fta_s
+}					t_format_type_attb;
 
-// type of file (dir or reg_file)
-typedef enum		t_type
+/*
+** for format output [-l] flag, max lengths of attributes from struct stat:
+*/
+typedef struct		s_format_out
 {
-	t_dir,
-	t_fl
-}					e_type;
+	int32_t			s_links;
+	int32_t			s_user;
+	int32_t			s_group;
+	int32_t			s_size;
+}					t_format_out;
 
 typedef enum		t_err_file
 {
@@ -87,52 +79,41 @@ typedef enum		t_err_file
 	fe_nopr			// no permissions
 }					e_err_file;
 
-// основная хуйня 2.0.
+/*
+** main stuff
+*/
 typedef struct		s_file
 {
 	char			*name;
 	struct stat 	stat;
 	e_err_file		fe_err;
 	struct s_file	*next;
+	struct s_file	*prev;
 }					t_file;
 
-typedef struct		s_format_output
-{
-	uint64_t		s_links;
-	uint64_t		s_user;
-	uint64_t		s_group;
-	uint64_t		s_size;
-}					t_format_output;
-
 /* MAIN FUCTIONS */
-void        ft_ls(t_file *args, char *path);
+void        		ft_ls(t_file *args, char *path);
 
 /* SORT OF LINKED LIST BY FLAGS */
-t_file* merge_Sort(t_file* head);
+t_file*				merge_Sort(t_file* head);
 
 /* FORMAT OUTPUT */
-void				format_print_files(t_file *fls, uint64_t total);
-t_format_output		*format_output_set(const struct stat *stat);
+t_format_out		*set_format_attb(const struct stat *stat);
+void				format_output_print(t_file *fls, uint64_t total);
+void				format_file_print(t_file *fls);
 
 /* PARSER */
-t_file		*parse_args(int ac, char *av[]);
-int32_t		update_flags(const int8_t shift);
-void		add_file(t_file **fls);
-t_file		*create_file(void);
+t_file				*parse_args(int ac, char *av[]);
+void				add_file(t_file **fls);
+t_file				*create_file(void);
 
 /* T_FILE FUNC */
-void		file_add(t_file **fls);
-void		file_list_free(t_file **head);
+void				file_add(t_file **fls);
+void				file_list_free(t_file **head);
 
 /* LIB PARSER */
-char		***av_split(int ac, char *av[]);
-void		av_free(char ***splited_av);
-void		av_print(char ***splited_av);
-
-/* TRASH */
-void printFileProperties(struct stat stats);
+char				***av_split(int ac, char *av[]);
+void				av_free(char ***splited_av);
+void				av_print(char ***splited_av);
 
 #endif
-
-// chgrp - изменить группу для файлов или директорий
-// chown - владелец

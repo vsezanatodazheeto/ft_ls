@@ -12,7 +12,7 @@ static int		desc_sort(t_file *f1, t_file *f2)
 
 static int		time_sort(t_file *f1, t_file *f2)
 {
-	return(ctime(&f1->stat.st_mtime) > ctime(&f2->stat.st_mtime));
+	return(difftime(f1->stat.st_mtime, f2->stat.st_mtime));
 }
 
 static t_file  *merge(t_file* l1, t_file* l2, int	(*f_ptr)(t_file *, t_file *))

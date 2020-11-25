@@ -1,6 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   av_parse.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/25 20:39:17 by yshawn            #+#    #+#             */
+/*   Updated: 2020/11/25 22:04:47 by yshawn           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-// вынести в библиотеку как мини парсер для аргументов из стандартного потока ввода
+/*
+** вынести в библиотеку как мини парсер для аргументов
+** из стандартного потока ввода
+*/
 
 /*
 ** consider any cases:
@@ -11,15 +26,32 @@
 
 void		av_print(char ***splited_av)
 {
-	for (int j = 0; splited_av[j]; j++)
-		for (int n = 0; splited_av[j][n]; n++)
-			ft_printf("{green}%s\n{eoc}", splited_av[j][n]);
+	int32_t i;
+	int32_t j;
+
+	i = 0;
+	while (splited_av[i])
+	{
+		j = 0;
+		while (splited_av[i][j])
+		{
+			ft_printf("{green}%s\n{eoc}", splited_av[i][j]);
+			j++;
+		}
+		i++;
+	}
 }
 
 void		av_free(char ***splited_av)
 {
-	for (int32_t i = 0; splited_av[i]; i++)
+	int32_t	i;
+
+	while (splited_av[i])
+	{
 		ft_arrdel((void ***)&splited_av[i]);
+		i++;
+	}
+	ft_arrdel((void ***)&splited_av[i]);
 	free(splited_av);
 }
 
