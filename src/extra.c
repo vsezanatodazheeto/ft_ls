@@ -22,7 +22,7 @@ static t_file	*file_create(void)
 
 	fl = (t_file *)malloc(sizeof(t_file));
 	if (!fl)
-		exit(1);
+		ERR_FCREATE;
 	fl->name = NULL;
 	fl->fe_err = fe_noer;
 	fl->next = NULL;

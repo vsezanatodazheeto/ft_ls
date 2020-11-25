@@ -25,7 +25,7 @@ static t_file	*update_files(char ***splited_av)
 				else
 					format_output_set(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
-					exit(1);
+					ERR_STRDUP;
 			}
 		}
 	}
@@ -39,9 +39,12 @@ static t_file	*update_files(char ***splited_av)
 			fls->fe_err = fe_noex; // тут доделать обработчик, может быть еще один тип
 		}
 	}
-	// ft_strncpy(fls->path, "./", PATH_MAX); // эту функцию нужно заточить под наш ЛС
 	return (fls);
 }
+
+/*
+** get on
+*/
 
 static void		parse_set_flags(char *av)
 {
@@ -100,7 +103,7 @@ t_file			*parse_args(int ac, char *av[])
 
 	splited_av = av_split(ac, av);
 	if (!splited_av)
-		exit (1);
+		ERR_AVSPLIT;
 	parse_check_flags(splited_av);
 	fls = update_files(splited_av);
 	av_free(splited_av);

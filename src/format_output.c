@@ -1,13 +1,5 @@
 #include "ft_ls.h"
 
-// typedef struct		s_format_mlen
-// {
-// 	uint64_t		s_links;
-// 	uint64_t		s_user;
-// 	uint64_t		s_group;
-// 	uint64_t		s_bytes;
-// }					t_format_mlen
-
 uint64_t			fo_get(int i)
 {
 	t_format_output	*f_out;

@@ -33,7 +33,7 @@ void				print_dir_contains(t_file *d_fl, char *old_path)
 	total = 0;
 
 	if (!dir)
-		ERR_OPD_NOEX;
+		ERR_OPD;
 	while ((entry = readdir(dir)))
 	{
 		file_add(&fls);
