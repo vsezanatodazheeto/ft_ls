@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 20:54:58 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/25 23:57:43 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 18:13:26 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static t_file	*file_create(void)
 	if (!f)
 		ERR_FCREATE;
 	f->name = NULL;
-	f->is_ex = fi_def;
 	f->next = NULL;
 	f->prev = NULL;
 	return (f);

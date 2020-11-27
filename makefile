@@ -32,8 +32,8 @@ PROG_SRC = main \
 			flags \
 			extra \
 			sort \
-			format_output \
-			format_rows_len
+			format_stat_cells_len \
+			format_output
 PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 
 # FILE PATH TO LIB, PROGRAM SRC/OBJ FILES

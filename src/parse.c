@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/27 17:36:10 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 18:14:21 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,7 @@ static t_file	*update_files(char ***splited_av)
 			{
 				file_add(&fls);
 				if (stat(splited_av[i][j], &fls->stat) < 0)
-				{
 					ERR_STATF(splited_av[i][j]);
-					fls->is_ex = fi_noex;
-				}
 				else
 					update_stat_cells_len(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
@@ -42,11 +39,7 @@ static t_file	*update_files(char ***splited_av)
 		if (!(fls->name = ft_strdup(D_CURR)))
 			ERR_STRDUP;
 		if (lstat(fls->name, &fls->stat) < 0)
-		{
-			// не знаю, нужно ли тут это, в коем веке мы не можем узнать инфу о папке, в которой находимся
 			ERR_STATF(fls->name);
-			fls->is_ex = fi_noex;
-		}
 	}
 	return (fls);
 }

@@ -65,25 +65,15 @@ typedef enum		e_format_type_attb
 }					t_format_type_attb;
 
 /*
-** for format output [-l] flag, max lengths of attributes from struct stat:
+** for format output [-l] flag, max lengths of cells from system struct stat:
 */
-typedef struct		s_format_out
+typedef struct		s_cells_len
 {
-	int32_t			s_links;
-	int32_t			s_user;
-	int32_t			s_group;
-	int32_t			s_size;
-}					t_format_out;
-
-/*
-** for t_file struct:
-** is file exist
-*/
-typedef enum		e_file_exist
-{
-	fi_def,
-	fi_noex,
-}					t_file_exist;
+	int32_t			l_links;
+	int32_t			l_user;
+	int32_t			l_group;
+	int32_t			l_size;
+}					t_cells_len;
 
 /*
 ** main stuff
@@ -92,7 +82,6 @@ typedef struct		s_file
 {
 	char			*name;
 	struct stat 	stat;
-	t_file_exist	is_ex;
 	struct s_file	*next;
 	struct s_file	*prev;
 }					t_file;
@@ -110,14 +99,15 @@ void				file_add(t_file **fls);
 void				file_list_free(t_file **head);
 
 /* SORT OF LINKED LIST BY FLAGS */
-void				merge_sort2(t_file **head);
+void				merge_sort(t_file **head);
+void				ftype_merge_sort(t_file **head);
 
 /* FORMAT OUTPUT */
 void				format_output_print(t_file *fls, uint64_t total);
 void				format_file_print(t_file *fls);
 
 /* FORMAT OUTPUT ROWS LENGTH */
-t_format_out		*update_stat_cells_len(const struct stat *stats);
+t_cells_len			*update_stat_cells_len(const struct stat *stats);
 int32_t				get_stat_cell_len(t_format_type_attb attb);
 void				reset_stat_cells_len(void);
 

@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/27 18:08:56 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 18:56:50 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int i = 0;
 
-void				set_newpath(t_file *d_fl, char *new_path, char *old_path)
+void				set_path(t_file *d_fl, char *path, char *old_path)
 {
-	*new_path = '\0';
-	old_path ? ft_strcat(new_path, old_path) : ft_strcat(new_path, d_fl->name);
+	*path = '\0';
+	old_path ? ft_strcat(path, old_path) : ft_strcat(path, d_fl->name);
 	// if (old_path)
 	// {
 	// 	ft_strcat(new_path, old_path);
@@ -30,12 +30,13 @@ void				set_newpath(t_file *d_fl, char *new_path, char *old_path)
 	// }
 }
 
-void				set_fullpath_tofile(char *fullpath, const char *newpath, const char *name)
+void				set_fullpath_tofile(char *fullpath, const char *path, \
+										const char *fl_name)
 {
 	*fullpath = '\0';
-	ft_strcat(fullpath, newpath);
+	ft_strcat(fullpath, path);
 	ft_strcat(fullpath, "/");
-	ft_strcat(fullpath, name);
+	ft_strcat(fullpath, fl_name);
 }
 
 void				form_new_fls(t_file *d_fl, char *old_path)
@@ -48,7 +49,7 @@ void				form_new_fls(t_file *d_fl, char *old_path)
 	char			new_path[PATH_MAX];
 	char			full_path[PATH_MAX + NAME_MAX];
 
-	set_newpath(d_fl, new_path, old_path);
+	set_path(d_fl, new_path, old_path);
 	fls = NULL;
 	if (!ISFLAG(flag_a) && d_fl->name[0] == '.' && d_fl->name[1])
 		return ;
@@ -66,17 +67,10 @@ void				form_new_fls(t_file *d_fl, char *old_path)
 	{
 		file_add(&fls);
 		if (!(fls->name = ft_strdup(entry->d_name)))
-		{
-			exit(1);
-		}
-		{
-			set_fullpath_tofile(full_path, new_path, fls->name);
-		}
+			ERR_STRDUP;
+		set_fullpath_tofile(full_path, new_path, fls->name);
 		if (lstat(full_path, &fls->stat) < 0)
-		{
 			ERR_STATF(fls->name);
-			fls->is_ex = fi_noex;
-		}
 		else
 		{
 			if (ISFLAG(flag_a))
@@ -91,7 +85,7 @@ void				form_new_fls(t_file *d_fl, char *old_path)
 			}
 		}
 	}
-	merge_sort2(&fls);
+	merge_sort(&fls);
 	// if (i++)
 	// 	ft_printf("\n");
 	// if (d_fl->next || d_fl->prev)
@@ -131,7 +125,7 @@ int			main(int ac, char *av[])
 	t_file	*fls_copy;
 
     fls = parse_args(ac, av);
-	// merge_Sort2(&fls);
+	ftype_merge_sort(&fls);
 	fls_copy = fls;
     while(fls)
     {
