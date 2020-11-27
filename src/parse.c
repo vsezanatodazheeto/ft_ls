@@ -24,14 +24,17 @@ static t_file	*update_files(char ***splited_av)
 	is_wrong_files = 0;
 	for (int i = 0; splited_av[i]; i++)
 	{
+		ft_printf("%s\n", splited_av[i][0]);
 		for (int j = 0; splited_av[i][j]; j++)
 		{
+			ft_bzero(&stat_temp, sizeof(struct stat));
 			// if ((splited_av[i][j][0] != '-' && splited_av[i][j][0] != '\0')
 			// || (splited_av[i][j][0] == '-' && splited_av[i][j][1] == '\0')) // + обработка фалйа с названием '-'
 			{
 				ft_printf("{pink}%s\n{eoc}", splited_av[i][j]);
 				if (lstat(splited_av[i][j], &stat_temp) < 0)
 				{
+					ft_printf("{yellow}------{eoc}\n");
 					ERR_STATF(splited_av[i][j]);
 					is_wrong_files = 1;
 				}
@@ -106,6 +109,7 @@ static char		***parse_check_flags(char ***splited_av)
 {
 	int32_t		i;
 	int32_t		j;
+	char		***splited_av_new;
 
 	i = 0;
 	while (splited_av[i] && is_flags_parsing)
@@ -117,19 +121,39 @@ static char		***parse_check_flags(char ***splited_av)
 		{
 			if (splited_av[i][j][0] != CH_FLAG)
 				break ;
+			ft_printf("{orange}%s\n{eoc}", splited_av[i][j]);
 			parse_set_flags(splited_av[i][j]);
 			j++;
 		}
 		i++;
 	}
-	if (!(*(splited_av + i)))
-		*splited_av = *(splited_av + i);
-	else
+	if (splited_av[i])
+		splited_av_new = splited_av + i - 1;
+	if (splited_av[i - 1][j])
 	{
-		**splited_av = **(splited_av + j - 1);
-		*splited_av = *(splited_av + i);
+		ft_printf("{red}%s\n{eoc}", splited_av[i - 1][j]);
+		splited_av_new = splited_av + (i - 1) * j;
+		splited_av_new = &(splited_av[i]) + j;
+		// splited_av_new = splited_av  + i - 1;
+		// splited_av_new = splited_av_new + j;
 	}
-	return (splited_av);
+	// if (!(*(splited_av + i)))
+	// {
+	// 	// return (NULL);
+	// 	*splited_av_new = *(splited_av + i);
+	// }
+	// else
+	// {
+	// 	splited_av_new = splited_av + i;
+	// 	// *splited_av_new = *(splited_av + i);
+	// 	// **splited_av_new = **(splited_av + j - 1);
+	// 	// ***splited_av_new = ***(splited_av_new + 0);
+	// }
+	for (int k = 0; splited_av_new[k]; k++)
+		for(int y = 0; splited_av_new[k][y]; y++)
+			ft_printf("{neon}%s\n{eoc}", splited_av_new[k][y]);
+	exit(0);
+	return (splited_av_new);
 }
 
 t_file			*parse_args(int ac, char *av[])
@@ -141,6 +165,7 @@ t_file			*parse_args(int ac, char *av[])
 	splited_av = av_split(ac, av);
 	if (!splited_av)
 		ERR_AVSPLIT;
+	av_print(splited_av);
 	splited_av = parse_check_flags(splited_av);
 	fls = update_files(splited_av);
 	exit(1);
