@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/26 00:21:16 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 17:36:10 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static t_file	*update_files(char ***splited_av)
 					fls->is_ex = fi_noex;
 				}
 				else
-					update_rows_stats_len(&fls->stat);
+					update_stat_cells_len(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
 					ERR_STRDUP;
 			}
@@ -62,19 +62,19 @@ static void		parse_set_flags(char *av)
 	if (!av)
 		return ;
 	av++;
-	shift = fl_def;
+	shift = flag_def;
 	while (*av)
 	{
 		if (*av == 'a')
-			shift = fl_a;
+			shift = flag_a;
 		else if (*av == 'l')
-			shift = fl_l;
+			shift = flag_l;
 		else if (*av == 'r')
-			shift = fl_r;
+			shift = flag_r;
 		else if (*av == 't')
-			shift = fl_t;
+			shift = flag_t;
 		else if (*av == 'R')
-			shift = fl_R;
+			shift = flag_R;
 		else
 			ERR_LSFLAG(*av);
 		update_flags(shift);

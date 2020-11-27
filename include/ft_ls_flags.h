@@ -10,15 +10,15 @@
 */
 typedef enum		t_flags
 {
-	fl_def = -1,
-	fl_a,
-	fl_l,
-	fl_r,
-	fl_t,
-	fl_R
+	flag_def = -1,
+	flag_a,
+	flag_l,
+	flag_r,
+	flag_t,
+	flag_R
 }					e_flags;
 
-# define ISFLAG(fl) ({update_flags(-1) & 1 << fl;})
+# define ISFLAG(shift) ({update_flags(-1) & 1 << shift;})
 
 int32_t		update_flags(const int8_t shift);
 

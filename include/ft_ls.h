@@ -110,14 +110,15 @@ void				file_add(t_file **fls);
 void				file_list_free(t_file **head);
 
 /* SORT OF LINKED LIST BY FLAGS */
-void				merge_Sort2(t_file **head);
+void				merge_sort2(t_file **head);
 
 /* FORMAT OUTPUT */
 void				format_output_print(t_file *fls, uint64_t total);
 void				format_file_print(t_file *fls);
 
 /* FORMAT OUTPUT ROWS LENGTH */
-t_format_out		*update_row_stats_len(const struct stat *stat);
-int32_t				get_row_stat_len(t_format_type_attb attb);
+t_format_out		*update_stat_cells_len(const struct stat *stats);
+int32_t				get_stat_cell_len(t_format_type_attb attb);
+void				reset_stat_cells_len(void);
 
 #endif

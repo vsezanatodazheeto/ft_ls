@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   format_out.c                                       :+:      :+:    :+:   */
+/*   format_output.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/26 00:34:59 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 17:37:48 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,19 @@ void			format_file_print(t_file *fls)
 	struct group	*grp;
 	struct passwd	*pw;
 
-	if (ISFLAG(fl_l))
+	if (ISFLAG(flag_l))
 	{
 		ft_printf("%s  ", f_permissions(fls->stat.st_mode));
-		ft_printf("%*d ", get_row_stat_len(fta_l), fls->stat.st_nlink);
+		ft_printf("%*d ", get_stat_cell_len(fta_l), fls->stat.st_nlink);
 		if ((pw = getpwuid(fls->stat.st_uid)))
-			ft_printf("%*s  ", get_row_stat_len(fta_u), pw->pw_name);
+			ft_printf("%*s  ", get_stat_cell_len(fta_u), pw->pw_name);
 		else
-			ft_printf("%*d ", get_row_stat_len(fta_u), fls->stat.st_gid);
+			ft_printf("%*d  ", get_stat_cell_len(fta_u), fls->stat.st_gid);
 		if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
-			ft_printf("%*s  ", get_row_stat_len(fta_g), grp->gr_name);
+			ft_printf("%*s  ", get_stat_cell_len(fta_g), grp->gr_name);
 		else
-			ft_printf("%*d ", get_row_stat_len(fta_g), fls->stat.st_gid);
-		ft_printf("%*d ", get_row_stat_len(fta_s), fls->stat.st_size);
+			ft_printf("%*d ", get_stat_cell_len(fta_g), fls->stat.st_gid);
+		ft_printf("%*d ", get_stat_cell_len(fta_s), fls->stat.st_size);
 		ft_printf("%.12s ", ctime(&fls->stat.st_mtime) + 4);
 	}
 	ft_printf("%s\n", fls->name);
@@ -89,11 +89,11 @@ void			format_file_print(t_file *fls)
 
 void			format_output_print(t_file *fls, uint64_t total)
 {
-	if (ISFLAG(fl_l))
+	if (ISFLAG(flag_l))
 		ft_printf("total %u\n", total);
 	while (fls)
 	{
-		if (ISFLAG(fl_a))
+		if (ISFLAG(flag_a))
 			format_file_print(fls);
 		else if ((*fls->name != CH_DOT))
 			format_file_print(fls);
