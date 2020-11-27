@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/27 18:56:50 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 21:56:40 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void				form_new_fls(t_file *d_fl, char *old_path)
 	// 	ft_printf("\n");
 	// if (d_fl->next || d_fl->prev)
 	// 	ft_printf("%s:\n", new_path);
-	format_output_print(fls, total);
+	format_output_print(fls, total, new_path);
 	fls_copy = fls;
 	if (ISFLAG(flag_R))
 	{
@@ -111,10 +111,12 @@ void				form_new_fls(t_file *d_fl, char *old_path)
 
 void		ft_ls(t_file *fls, char *path)
 {
-	if (S_ISREG(fls->stat.st_mode) && !ISFLAG(flag_R))
-		format_file_print(fls);
-	if (S_ISDIR(fls->stat.st_mode))
+	if (!S_ISDIR(fls->stat.st_mode) && !ISFLAG(flag_R))
+		format_file_print(fls, path);
+	else
 		form_new_fls(fls, path);
+	// if (S_ISDIR(fls->stat.st_mode))
+		// format_file_print(fls, fls->name);
 }
 
 void printFileProperties(struct stat stats);
@@ -127,6 +129,9 @@ int			main(int ac, char *av[])
     fls = parse_args(ac, av);
 	ftype_merge_sort(&fls);
 	fls_copy = fls;
+	// if (S_ISLNK(fls->stat.st_mode))
+		// ft_printf("egruoegrigeriubjegrjegr\n");
+	// exit(0);
     while(fls)
     {
     	ft_ls(fls, NULL);

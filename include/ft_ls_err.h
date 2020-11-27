@@ -19,7 +19,7 @@
 # define D_CURR "."
 # define D_BACK ".."
 
-# define EMSG_LSFLAG "ft_ls: illegal option: -"
+# define EMSG_LSFLAG "ft_ls: illegal option: -- "
 # define ERR_LSFLAG_EXTRA(flag) ({ft_fprintf(2, "%s%c\n", EMSG_LSFLAG, flag);})
 # define ERR_LSFLAG(flag)({ERR_LSFLAG_EXTRA(flag); exit(3);})
 

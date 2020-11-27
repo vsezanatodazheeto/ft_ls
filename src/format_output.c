@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/27 17:37:48 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/27 21:59:21 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char		*f_permissions(mode_t mode)
 ** awesome print time handling
 */
 
-void			format_file_print(t_file *fls)
+void			format_file_print(t_file *fls, const char *path)
 {
 	struct group	*grp;
 	struct passwd	*pw;
@@ -83,20 +83,32 @@ void			format_file_print(t_file *fls)
 		ft_printf("%*d ", get_stat_cell_len(fta_s), fls->stat.st_size);
 		ft_printf("%.12s ", ctime(&fls->stat.st_mtime) + 4);
 	}
-	ft_printf("%s\n", fls->name);
+	ft_printf("%s", fls->name);
+	if (S_ISLNK(fls->stat.st_mode))
+	{
+		char kek[PATH_MAX];
+		char full[PATH_MAX];
+		ft_bzero(full, PATH_MAX);
+		ft_bzero(kek, PATH_MAX);
+		set_fullpath_tofile(full, path, fls->name);
+		readlink(full, kek, PATH_MAX);
+		ft_printf(" -> %s", kek);
+	}
+	ft_printf("\n");
+
 	i++;
 }
 
-void			format_output_print(t_file *fls, uint64_t total)
+void			format_output_print(t_file *fls, uint64_t total, const char *path)
 {
 	if (ISFLAG(flag_l))
 		ft_printf("total %u\n", total);
 	while (fls)
 	{
 		if (ISFLAG(flag_a))
-			format_file_print(fls);
+			format_file_print(fls, path);
 		else if ((*fls->name != CH_DOT))
-			format_file_print(fls);
+			format_file_print(fls, path);
 		fls = fls->next;
 	}
 }

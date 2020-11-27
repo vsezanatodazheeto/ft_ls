@@ -44,10 +44,6 @@
 */
 #include <grp.h>
 
-// ◦ listxattr // выводит список названий расширенных атрибутов  
-// ◦ getxattr // получает расширенное значение атрибутов
-#include <sys/xattr.h>
-
 /*
 ** for format output [-l] flag, types of max lengths of:
 ** 
@@ -103,12 +99,16 @@ void				merge_sort(t_file **head);
 void				ftype_merge_sort(t_file **head);
 
 /* FORMAT OUTPUT */
-void				format_output_print(t_file *fls, uint64_t total);
-void				format_file_print(t_file *fls);
+void			format_output_print(t_file *fls, uint64_t total, const char *path);
+void			format_file_print(t_file *fls, const char *path);
+// void				format_output_print(t_file *fls, uint64_t total);
+// void				format_file_print(t_file *fls);
 
 /* FORMAT OUTPUT ROWS LENGTH */
 t_cells_len			*update_stat_cells_len(const struct stat *stats);
 int32_t				get_stat_cell_len(t_format_type_attb attb);
 void				reset_stat_cells_len(void);
 
+void				set_fullpath_tofile(char *fullpath, const char *path, \
+										const char *fl_name);
 #endif

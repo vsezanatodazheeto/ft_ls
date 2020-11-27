@@ -21,7 +21,7 @@ H_NAME = ft_ls ft_ls_flags ft_ls_err
 H_NAME := $(addprefix $(H_DIR), $(addsuffix .h, $(H_NAME)))
 
 # PROGRAM NAME
-PROG_NAME = a.out
+PROG_NAME = ft_ls
 
 # PROGRAM DIR
 PROG_DIR := src/
