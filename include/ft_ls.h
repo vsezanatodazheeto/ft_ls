@@ -7,18 +7,21 @@
 	#include <limits.h>
 #endif
 
-/* nashi */
-#include <inttypes.h>
-#include "ft_ls_flags.h"
-#include "ft_ls_err.h"
-#include "../lib/include/libft.h"
-#include "../lib/include/get_next_line.h"
-#include "../lib/include/ft_printf.h"
-
-#include "unistd.h"
+#include <unistd.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdlib.h>
+
+/*
+** lib
+*/
+#include "libft.h"
+#include "get_next_line.h"
+#include "ft_printf.h"
+#include "av_parse.h"
+
+#include "ft_ls_flags.h"
+#include "ft_ls_err.h"
 
 /*
 ** opendir, readdir, closedir
@@ -97,14 +100,6 @@ typedef struct		s_file
 /* MAIN FUCTIONS */
 void        		ft_ls(t_file *args, char *path);
 
-/* SORT OF LINKED LIST BY FLAGS */
-void				merge_Sort2(t_file **head);
-
-/* FORMAT OUTPUT */
-t_format_out		*set_format_attb(const struct stat *stat);
-void				format_output_print(t_file *fls, uint64_t total);
-void				format_file_print(t_file *fls);
-
 /* PARSER */
 t_file				*parse_args(int ac, char *av[]);
 void				add_file(t_file **fls);
@@ -114,9 +109,15 @@ t_file				*create_file(void);
 void				file_add(t_file **fls);
 void				file_list_free(t_file **head);
 
-/* LIB PARSER */
-char				***av_split(int ac, char *av[]);
-void				av_free(char ***splited_av);
-void				av_print(char ***splited_av);
+/* SORT OF LINKED LIST BY FLAGS */
+void				merge_Sort2(t_file **head);
+
+/* FORMAT OUTPUT */
+void				format_output_print(t_file *fls, uint64_t total);
+void				format_file_print(t_file *fls);
+
+/* FORMAT OUTPUT ROWS LENGTH */
+t_format_out		*update_row_stats_len(const struct stat *stat);
+int32_t				get_row_stat_len(t_format_type_attb attb);
 
 #endif

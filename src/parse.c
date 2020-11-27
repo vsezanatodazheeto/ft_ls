@@ -30,7 +30,7 @@ static t_file	*update_files(char ***splited_av)
 					fls->is_ex = fi_noex;
 				}
 				else
-					set_format_attb(&fls->stat);
+					update_rows_stats_len(&fls->stat);
 				if (!(fls->name = ft_strdup(splited_av[i][j])))
 					ERR_STRDUP;
 			}

@@ -14,53 +14,10 @@
 
 extern int i;
 
-static int32_t		get_format_attb(t_format_type_attb attb)
-{
-	t_format_out	*f_out;
-
-	f_out = set_format_attb(NULL);
-	if (attb == fta_l)
-		return (f_out->s_links);
-	else if (attb == fta_u)
-		return (f_out->s_user);
-	else if (attb == fta_g)
-		return (f_out->s_group);
-	else if (attb == fta_s)
-		return (f_out->s_size);
-	return (0);
-}
-
-t_format_out	*set_format_attb(const struct stat *stat)
-{
-	static t_format_out	f_out = {0, 0, 0, 0};
-	t_format_out		temp;
-	struct group		*grp;
-	struct passwd		*pw;
-
-	ft_bzero(&temp, sizeof(t_format_out));
-	if (!stat)
-		return (&f_out);
-	temp.s_links = ft_numlen(stat->st_nlink, 10);
-	if ((pw = getpwuid(stat->st_uid)))
-		temp.s_user = ft_strlen(pw->pw_name);
-	if ((grp = getgrgid(stat->st_gid)))
-		temp.s_group = ft_strlen(grp->gr_name);
-	temp.s_size = ft_numlen(stat->st_size, 10);
-	if (temp.s_links > f_out.s_links)
-		f_out.s_links = temp.s_links;
-	if (temp.s_user > f_out.s_user)
-		f_out.s_user = temp.s_user;
-	if (temp.s_group > f_out.s_group)
-		f_out.s_group = temp.s_group;
-	if (temp.s_size > f_out.s_size)
-		f_out.s_size = temp.s_size;
-	return (&f_out);
-}
-
 static char		f_type(mode_t mode)
 {
-	char		c;
 	mode_t		type;
+	char		c;
 
 	type = mode & S_IFMT;
 	if (type == S_IFBLK)
@@ -114,16 +71,16 @@ void			format_file_print(t_file *fls)
 	if (ISFLAG(fl_l))
 	{
 		ft_printf("%s  ", f_permissions(fls->stat.st_mode));
-		ft_printf("%*d ", get_format_attb(fta_l), fls->stat.st_nlink);
+		ft_printf("%*d ", get_row_stat_len(fta_l), fls->stat.st_nlink);
 		if ((pw = getpwuid(fls->stat.st_uid)))
-			ft_printf("%*s  ", get_format_attb(fta_u), pw->pw_name);
+			ft_printf("%*s  ", get_row_stat_len(fta_u), pw->pw_name);
 		else
-			ft_printf("%*d ", get_format_attb(fta_u), fls->stat.st_gid);
+			ft_printf("%*d ", get_row_stat_len(fta_u), fls->stat.st_gid);
 		if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
-			ft_printf("%*s  ", get_format_attb(fta_g), grp->gr_name);
+			ft_printf("%*s  ", get_row_stat_len(fta_g), grp->gr_name);
 		else
-			ft_printf("%*d ", get_format_attb(fta_g), fls->stat.st_gid);
-		ft_printf("%*d ", get_format_attb(fta_s), fls->stat.st_size);
+			ft_printf("%*d ", get_row_stat_len(fta_g), fls->stat.st_gid);
+		ft_printf("%*d ", get_row_stat_len(fta_s), fls->stat.st_size);
 		ft_printf("%.12s ", ctime(&fls->stat.st_mtime) + 4);
 	}
 	ft_printf("%s\n", fls->name);
@@ -138,7 +95,7 @@ void			format_output_print(t_file *fls, uint64_t total)
 	{
 		if (ISFLAG(fl_a))
 			format_file_print(fls);
-		else if ((fls->name[0] != CH_DOT))
+		else if ((*fls->name != CH_DOT))
 			format_file_print(fls);
 		fls = fls->next;
 	}

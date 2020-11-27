@@ -33,7 +33,8 @@ PROG_SRC = main \
 			flags \
 			extra \
 			sort \
-			format_out
+			format_out \
+			format_out_attb
 PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 
 # FILE PATH TO LIB, PROGRAM SRC/OBJ FILES
@@ -50,7 +51,7 @@ all: $(L_RULE) $(PROG_NAME)
 	@$(MAKE) -sC $(L_DIR)
 
 $(PROG_NAME) : $(PROG_SRC) $(H_NAME) $(L_NAME)
-	@$(CC) $(CFLAGS) $(PROG_SRC) $(L_NAME) -o $(PROG_NAME) -I $(H_DIR)
+	@$(CC) $(CFLAGS) $(PROG_SRC) $(L_NAME) -I $(L_DIR)$(H_DIR) -o $(PROG_NAME) -I $(H_DIR)
 	@echo $(BLUE)"FT_LS COMPILED"$(EOC)
 
 trash:
