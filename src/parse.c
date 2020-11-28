@@ -6,23 +6,23 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 18:43:57 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 19:19:13 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int is_flags_parsing = 1;
-
 static t_file	*update_files(char **splited_av)
 {
 	t_file		*fls;
-	uint8_t		is_wrong_files;
 	struct stat	stat_temp;
-	
+	uint8_t		is_wrong_files;
+	int32_t		i;
+
 	fls = NULL;
 	is_wrong_files = 0;
-	for (int i = 0; splited_av[i]; i++)
+	i = 0;
+	while (splited_av[i])
 	{
 		ft_bzero(&stat_temp, sizeof(struct stat));
 		if (lstat(splited_av[i], &stat_temp) < 0)
@@ -38,6 +38,7 @@ static t_file	*update_files(char **splited_av)
 			if (!(fls->name = ft_strdup(splited_av[i])))
 				ERR_STRDUP;
 		}
+		i++;
 	}
 	if (!fls && !is_wrong_files)
 	{
@@ -54,13 +55,13 @@ static t_file	*update_files(char **splited_av)
 ** accept at the entrance char * that starts from "-...""
 */
 
-static void		parse_set_flags(char *av)
+static uint8_t	parse_set_flags(char *av)
 {
 	e_flags		shift;
 	int32_t		i;
 
 	if (!av)
-		return ;
+		return (0);
 	i = 1;
 	shift = flag_def;
 	while (av[i])
@@ -80,10 +81,7 @@ static void		parse_set_flags(char *av)
 		else if (av[i] == '-')
 		{
 			if (ft_strcmp(av + i - 1, "--") == 0)
-			{
-				is_flags_parsing = 0;
-				break ;
-			}
+				return (1);
 			else
 				ERR_LSFLAG(av[i]);
 		}
@@ -92,6 +90,7 @@ static void		parse_set_flags(char *av)
 		update_flags(shift);
 		i++;
 	}
+	return (0);
 }
 
 static char		**parse_check_flags(char *s_av[])
@@ -100,11 +99,12 @@ static char		**parse_check_flags(char *s_av[])
 	int32_t		j;
 
 	i = 0;
-	while (s_av[i] && is_flags_parsing)
+	while (s_av[i])
 	{
 		if (s_av[i][0] != CH_FLAG)
 			break ;
-		parse_set_flags(s_av[i]);
+		if (parse_set_flags(s_av[i]) != 0)
+			break ;
 		i++;
 	}
 	return (s_av + i);

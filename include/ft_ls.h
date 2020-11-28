@@ -86,7 +86,7 @@ typedef struct		s_file
 void        		ft_ls(t_file *args, char *path);
 
 /* PARSER */
-t_file				*parse_args(int ac, char *av[]);
+t_file				*parse_args(int ac, char *argv[]);
 void				add_file(t_file **fls);
 t_file				*create_file(void);
 
