@@ -28,8 +28,6 @@ static t_file	*update_files(char ***splited_av)
 		for (int j = 0; splited_av[i][j]; j++)
 		{
 			ft_bzero(&stat_temp, sizeof(struct stat));
-			// if ((splited_av[i][j][0] != '-' && splited_av[i][j][0] != '\0')
-			// || (splited_av[i][j][0] == '-' && splited_av[i][j][1] == '\0')) // + обработка фалйа с названием '-'
 			{
 				ft_printf("{pink}%s\n{eoc}", splited_av[i][j]);
 				if (lstat(splited_av[i][j], &stat_temp) < 0)
@@ -105,70 +103,51 @@ static void		parse_set_flags(char *av)
 	}
 }
 
-static char		***parse_check_flags(char ***splited_av)
+static char		**parse_check_flags(char *s_av[])
 {
 	int32_t		i;
 	int32_t		j;
-	char		***splited_av_new;
 
 	i = 0;
-	while (splited_av[i] && is_flags_parsing)
+	while (s_av[i] && is_flags_parsing)
 	{
-		if (splited_av[i][0] && splited_av[i][0][0] != CH_FLAG)
+		if (s_av[i][0] != CH_FLAG)
 			break ;
-		j = 0;
-		while (splited_av[i][j] && is_flags_parsing)
-		{
-			if (splited_av[i][j][0] != CH_FLAG)
-				break ;
-			ft_printf("{orange}%s\n{eoc}", splited_av[i][j]);
-			parse_set_flags(splited_av[i][j]);
-			j++;
-		}
+		parse_set_flags(s_av[i]);
 		i++;
 	}
-	if (splited_av[i])
-		splited_av_new = splited_av + i - 1;
-	if (splited_av[i - 1][j])
-	{
-		ft_printf("{red}%s\n{eoc}", splited_av[i - 1][j]);
-		splited_av_new = splited_av + (i - 1) * j;
-		splited_av_new = &(splited_av[i]) + j;
-		// splited_av_new = splited_av  + i - 1;
-		// splited_av_new = splited_av_new + j;
-	}
-	// if (!(*(splited_av + i)))
+	ft_printf("{yellow}%s\n{eoc}", s_av[i]);
+	return (s_av - 1);
+	// while (*splited_av && is_flags_parsing)
 	// {
-	// 	// return (NULL);
-	// 	*splited_av_new = *(splited_av + i);
+	// 	if ((*splited_av)[0] && (*splited_av)[0][0] != CH_FLAG)
+	// 		break ;
+	// 	j = 0;
+	// 	while (**splited_av && is_flags_parsing)
+	// 	{
+	// 		parse_set_flags(**splited_av);
+	// 		(*splited_av)++;
+	// 	}
+	// 	splited_av++;
 	// }
-	// else
-	// {
-	// 	splited_av_new = splited_av + i;
-	// 	// *splited_av_new = *(splited_av + i);
-	// 	// **splited_av_new = **(splited_av + j - 1);
-	// 	// ***splited_av_new = ***(splited_av_new + 0);
-	// }
-	for (int k = 0; splited_av_new[k]; k++)
-		for(int y = 0; splited_av_new[k][y]; y++)
-			ft_printf("{neon}%s\n{eoc}", splited_av_new[k][y]);
-	exit(0);
-	return (splited_av_new);
+	// return (splited_av);
 }
 
 t_file			*parse_args(int ac, char *av[])
 {
 	t_file		*fls;
 	char		***splited_av;
-	char		***splited_av_copy;
+	char		**s_av;
 
 	splited_av = av_split(ac, av);
 	if (!splited_av)
 		ERR_AVSPLIT;
-	av_print(splited_av);
-	splited_av = parse_check_flags(splited_av);
+	s_av = av_convert(splited_av);
+	if (!s_av)
+		ERR_AVSPLIT;
+	s_av = parse_check_flags(s_av);
+	exit(0);
 	fls = update_files(splited_av);
-	exit(1);
-	av_free(splited_av_copy);
+	// av_free(splited_av_copy);
 	return (fls);
 }
