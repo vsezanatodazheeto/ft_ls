@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 00:34:56 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 18:43:57 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int is_flags_parsing = 1;
 
-static t_file	*update_files(char ***splited_av)
+static t_file	*update_files(char **splited_av)
 {
 	t_file		*fls;
 	uint8_t		is_wrong_files;
@@ -24,32 +24,23 @@ static t_file	*update_files(char ***splited_av)
 	is_wrong_files = 0;
 	for (int i = 0; splited_av[i]; i++)
 	{
-		ft_printf("%s\n", splited_av[i][0]);
-		for (int j = 0; splited_av[i][j]; j++)
+		ft_bzero(&stat_temp, sizeof(struct stat));
+		if (lstat(splited_av[i], &stat_temp) < 0)
 		{
-			ft_bzero(&stat_temp, sizeof(struct stat));
-			{
-				ft_printf("{pink}%s\n{eoc}", splited_av[i][j]);
-				if (lstat(splited_av[i][j], &stat_temp) < 0)
-				{
-					ft_printf("{yellow}------{eoc}\n");
-					ERR_STATF(splited_av[i][j]);
-					is_wrong_files = 1;
-				}
-				else
-				{
-					file_add(&fls);
-					ft_memcpy(&fls->stat, &stat_temp, sizeof(struct stat));
-					update_stat_cells_len(&fls->stat);
-					if (!(fls->name = ft_strdup(splited_av[i][j])))
-						ERR_STRDUP;
-				}
-			}
+			ERR_STATF(splited_av[i]);
+			is_wrong_files = 1;
+		}
+		else
+		{
+			file_add(&fls);
+			ft_memcpy(&fls->stat, &stat_temp, sizeof(struct stat));
+			update_stat_cells_len(&fls->stat);
+			if (!(fls->name = ft_strdup(splited_av[i])))
+				ERR_STRDUP;
 		}
 	}
-	if(!fls && !is_wrong_files)
+	if (!fls && !is_wrong_files)
 	{
-		ft_printf("{red}-------------------------------\n{eoc}");
 		file_add(&fls);
 		if (!(fls->name = ft_strdup(D_CURR)))
 			ERR_STRDUP;
@@ -116,38 +107,24 @@ static char		**parse_check_flags(char *s_av[])
 		parse_set_flags(s_av[i]);
 		i++;
 	}
-	ft_printf("{yellow}%s\n{eoc}", s_av[i]);
-	return (s_av - 1);
-	// while (*splited_av && is_flags_parsing)
-	// {
-	// 	if ((*splited_av)[0] && (*splited_av)[0][0] != CH_FLAG)
-	// 		break ;
-	// 	j = 0;
-	// 	while (**splited_av && is_flags_parsing)
-	// 	{
-	// 		parse_set_flags(**splited_av);
-	// 		(*splited_av)++;
-	// 	}
-	// 	splited_av++;
-	// }
-	// return (splited_av);
+	return (s_av + i);
 }
 
-t_file			*parse_args(int ac, char *av[])
+t_file			*parse_args(int ac, char *argv[])
 {
 	t_file		*fls;
 	char		***splited_av;
-	char		**s_av;
+	char		**av;
+	char		**av_copy;
 
-	splited_av = av_split(ac, av);
-	if (!splited_av)
+	if (!(splited_av = av_split(ac, argv)))
 		ERR_AVSPLIT;
-	s_av = av_convert(splited_av);
-	if (!s_av)
+	if (!(av = av_convert(splited_av)))
 		ERR_AVSPLIT;
-	s_av = parse_check_flags(s_av);
-	exit(0);
-	fls = update_files(splited_av);
-	// av_free(splited_av_copy);
+	av_free(splited_av);
+	av_copy = av;
+	av = parse_check_flags(av);
+	fls = update_files(av);
+	ft_arrdel((void ***)&av_copy);
 	return (fls);
 }
