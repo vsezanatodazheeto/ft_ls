@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 22:10:23 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 23:14:09 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,19 +115,4 @@ void			format_file_print(t_file *fls, const char *path)
 		format_file_link_print(fls, path);
 	ft_printf("\n");
 	g_printed++;
-}
-
-void			format_output_print(t_file *fls, uint64_t total, \
-									const char *path)
-{
-	if (ISFLAG(flag_l))
-		ft_printf("total %u\n", total);
-	while (fls)
-	{
-		if (ISFLAG(flag_a))
-			format_file_print(fls, path);
-		else if ((*fls->name != CH_DOT))
-			format_file_print(fls, path);
-		fls = fls->next;
-	}
 }

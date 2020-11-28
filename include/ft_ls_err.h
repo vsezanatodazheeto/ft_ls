@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls_err.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/28 23:15:38 by yshawn            #+#    #+#             */
+/*   Updated: 2020/11/28 23:15:39 by yshawn           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_LS_ERR_H
 # define FT_LS_ERR_H
 
@@ -10,14 +22,6 @@
 ** strerror
 */
 # include <string.h>
-
-# define CH_DOT '.'
-# define CH_FLAG '-'
-# define CH_SLASH '/'
-# define S_SLASH "/"
-
-# define D_CURR "."
-# define D_BACK ".."
 
 # define EMSG_LSFLAG "ft_ls: illegal option: -- "
 # define ERR_LSFLAG_EXTRA(flag) ({ft_fprintf(2, "%s%c\n", EMSG_LSFLAG, flag);})

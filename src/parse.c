@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 22:09:29 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 23:04:36 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static uint8_t	update_files_stats_handling(t_file **fls, const char *f_name)
 	return (0);
 }
 
-static t_file	*update_files(char **splited_av)
+t_file			*update_files(char **splited_av)
 {
 	t_file		*fls;
 	uint8_t		is_wrong_files;
@@ -50,24 +50,5 @@ static t_file	*update_files(char **splited_av)
 	}
 	if (!fls && !is_wrong_files)
 		update_files_stats_handling(&fls, D_CURR);
-	return (fls);
-}
-
-t_file			*parse_args(int ac, char *argv[])
-{
-	t_file		*fls;
-	char		***splited_av;
-	char		**av;
-	char		**av_copy;
-
-	if (!(splited_av = av_split(ac, argv)))
-		ERR_AVSPLIT;
-	if (!(av = av_convert(splited_av)))
-		ERR_AVSPLIT;
-	av_free(splited_av);
-	av_copy = av;
-	av = parse_check_flags(av);
-	fls = update_files(av);
-	ft_arrdel((void ***)&av_copy);
 	return (fls);
 }

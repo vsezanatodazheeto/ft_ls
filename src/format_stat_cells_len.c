@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 18:16:18 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 21:43:23 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 23:29:21 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,20 @@ void			reset_stat_cells_len(void)
 	ft_bzero(len_stats, sizeof(t_cells_len));
 }
 
-int32_t			get_stat_cell_len(t_format_type_attb attb)
+int32_t			get_stat_cell_len(t_flags_cells flag_cell)
 {
 	t_cells_len	*len_stats;
 
 	len_stats = update_stat_cells_len(NULL);
-	if (attb == fta_l)
+	if (flag_cell == fta_l)
 		return (len_stats->l_links);
-	else if (attb == fta_u)
+	else if (flag_cell == fta_u)
 		return (len_stats->l_user);
-	else if (attb == fta_g)
+	else if (flag_cell == fta_g)
 		return (len_stats->l_group);
-	else if (attb == fta_s)
+	else if (flag_cell == fta_s)
 		return (len_stats->l_size);
-	else if (attb == fta_t)
+	else if (flag_cell == fta_t)
 		return (len_stats->l_time);
 	return (0);
 }

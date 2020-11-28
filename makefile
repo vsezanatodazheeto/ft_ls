@@ -28,13 +28,14 @@ PROG_DIR := src/
 
 # PROGRAM SRCS
 PROG_SRC = main \
+			ls \
 			parse \
 			parse_flags_handling \
-			extra \
 			sort \
 			sort_condition \
 			format_stat_cells_len \
-			format_output
+			format_output \
+			extra
 PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 
 # FILE PATH TO LIB, PROGRAM SRC/OBJ FILES

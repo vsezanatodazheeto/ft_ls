@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:44 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 22:09:39 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 23:23:31 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int32_t			update_flags(const int8_t shift)
 ** accept at the entrance char * that starts from "-...""
 */
 
-static e_flags	flag_cases(const char ch, e_flags *shift)
+static t_flags	flag_cases(const char ch, t_flags *shift)
 {
 	if (ch == 'a')
 		*shift = flag_a;
@@ -41,7 +41,7 @@ static e_flags	flag_cases(const char ch, e_flags *shift)
 
 static uint8_t	parse_set_flags(char *av)
 {
-	e_flags		shift;
+	t_flags		shift;
 	int32_t		i;
 
 	shift = flag_def;
