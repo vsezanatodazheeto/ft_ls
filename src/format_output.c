@@ -6,13 +6,13 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/27 21:59:21 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 22:10:23 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-extern int i;
+extern int32_t	g_printed;
 
 static char		f_type(mode_t mode)
 {
@@ -60,8 +60,35 @@ static char		*f_permissions(mode_t mode)
 }
 
 /*
-** awesome print time handling
+** "awesome print time handling"
 */
+
+static void		format_date_print(time_t mtime)
+{
+	int64_t		now_time;
+	char		*str_date;
+
+	now_time = time(NULL);
+	if (!(str_date = ctime(&mtime)))
+		return ;
+	ft_printf("%.6s ", str_date + 4);
+	if (now_time - mtime > SIX_MONTH)
+		ft_printf("%*.4s ", get_stat_cell_len(fta_t), str_date + 20);
+	else
+		ft_printf("%*.5s ", get_stat_cell_len(fta_t), str_date + 11);
+}
+
+void			format_file_link_print(t_file *fls, const char *path)
+{
+	char		linked_f_name[NAME_MAX];
+	char		full_path_tolink[PATH_MAX + NAME_MAX];
+
+	*linked_f_name = '\0';
+	*full_path_tolink = '\0';
+	set_fullpath_tofile(full_path_tolink, path, fls->name);
+	if ((readlink(full_path_tolink, linked_f_name, PATH_MAX)) > 0)
+		ft_printf(" -> %s", linked_f_name);
+}
 
 void			format_file_print(t_file *fls, const char *path)
 {
@@ -73,33 +100,25 @@ void			format_file_print(t_file *fls, const char *path)
 		ft_printf("%s  ", f_permissions(fls->stat.st_mode));
 		ft_printf("%*d ", get_stat_cell_len(fta_l), fls->stat.st_nlink);
 		if ((pw = getpwuid(fls->stat.st_uid)))
-			ft_printf("%*s  ", get_stat_cell_len(fta_u), pw->pw_name);
+			ft_printf("%-*s  ", get_stat_cell_len(fta_u), pw->pw_name);
 		else
-			ft_printf("%*d  ", get_stat_cell_len(fta_u), fls->stat.st_gid);
+			ft_printf("%-*d  ", get_stat_cell_len(fta_u), fls->stat.st_gid);
 		if ((grp = getgrgid(fls->stat.st_gid)) != NULL)
-			ft_printf("%*s  ", get_stat_cell_len(fta_g), grp->gr_name);
+			ft_printf("%-*s  ", get_stat_cell_len(fta_g), grp->gr_name);
 		else
-			ft_printf("%*d ", get_stat_cell_len(fta_g), fls->stat.st_gid);
+			ft_printf("%-*d ", get_stat_cell_len(fta_g), fls->stat.st_gid);
 		ft_printf("%*d ", get_stat_cell_len(fta_s), fls->stat.st_size);
-		ft_printf("%.12s ", ctime(&fls->stat.st_mtime) + 4);
+		format_date_print(fls->stat.st_mtime);
 	}
 	ft_printf("%s", fls->name);
 	if (S_ISLNK(fls->stat.st_mode))
-	{
-		char kek[PATH_MAX];
-		char full[PATH_MAX];
-		ft_bzero(full, PATH_MAX);
-		ft_bzero(kek, PATH_MAX);
-		set_fullpath_tofile(full, path, fls->name);
-		readlink(full, kek, PATH_MAX);
-		ft_printf(" -> %s", kek);
-	}
+		format_file_link_print(fls, path);
 	ft_printf("\n");
-
-	i++;
+	g_printed++;
 }
 
-void			format_output_print(t_file *fls, uint64_t total, const char *path)
+void			format_output_print(t_file *fls, uint64_t total, \
+									const char *path)
 {
 	if (ISFLAG(flag_l))
 		ft_printf("total %u\n", total);

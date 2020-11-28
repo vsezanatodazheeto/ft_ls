@@ -44,6 +44,8 @@
 */
 #include <grp.h>
 
+# define SIX_MONTH 15768000
+
 /*
 ** for format output [-l] flag, types of max lengths of:
 ** 
@@ -57,7 +59,8 @@ typedef enum		e_format_type_attb
 	fta_l,
 	fta_u,
 	fta_g,
-	fta_s
+	fta_s,
+	fta_t
 }					t_format_type_attb;
 
 /*
@@ -69,6 +72,7 @@ typedef struct		s_cells_len
 	int32_t			l_user;
 	int32_t			l_group;
 	int32_t			l_size;
+	int32_t			l_time;
 }					t_cells_len;
 
 /*
@@ -87,6 +91,7 @@ void        		ft_ls(t_file *args, char *path);
 
 /* PARSER */
 t_file				*parse_args(int ac, char *argv[]);
+char				**parse_check_flags(char *av[]);
 void				add_file(t_file **fls);
 t_file				*create_file(void);
 
@@ -96,13 +101,15 @@ void				file_list_free(t_file **head);
 
 /* SORT OF LINKED LIST BY FLAGS */
 void				merge_sort(t_file **head);
+int					asc_sort(t_file *f1, t_file *f2);
+int					desc_sort(t_file *f1, t_file *f2);
+int					time_sort(t_file *f1, t_file *f2);
+int					first_sort(t_file *f1, t_file *f2);
 void				ftype_merge_sort(t_file **head);
 
 /* FORMAT OUTPUT */
 void			format_output_print(t_file *fls, uint64_t total, const char *path);
 void			format_file_print(t_file *fls, const char *path);
-// void				format_output_print(t_file *fls, uint64_t total);
-// void				format_file_print(t_file *fls);
 
 /* FORMAT OUTPUT ROWS LENGTH */
 t_cells_len			*update_stat_cells_len(const struct stat *stats);

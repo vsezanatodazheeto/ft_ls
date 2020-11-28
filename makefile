@@ -6,7 +6,7 @@ EOC = "\e[0m"
 
 # COMPILER SETTINGS
 CC = clang
-# CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 
 # LIB (LIBFT, GET_NEXT_LINE, PRINTF)
 L_DIR = lib/
@@ -29,9 +29,10 @@ PROG_DIR := src/
 # PROGRAM SRCS
 PROG_SRC = main \
 			parse \
-			flags \
+			parse_flags_handling \
 			extra \
 			sort \
+			sort_condition \
 			format_stat_cells_len \
 			format_output
 PROG_SRC := $(addsuffix .c, $(PROG_SRC))

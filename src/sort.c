@@ -6,44 +6,13 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 13:06:30 by pcomic            #+#    #+#             */
-/*   Updated: 2020/11/27 18:57:10 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 22:12:36 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static int			asc_sort(t_file *f1, t_file *f2)
-{
-	return (ft_strcmp(f2->name, f1->name));
-}
-
-static int			desc_sort(t_file *f1, t_file *f2)
-{
-	return (ft_strcmp(f1->name, f2->name));
-}
-
-static int			time_sort(t_file *f1, t_file *f2)
-{
-	return (difftime(f1->stat.st_mtime, f2->stat.st_mtime));
-}
-
-static int			first_sort(t_file *f1, t_file *f2)
-{
-	if (!S_ISDIR(f1->stat.st_mode) && S_ISDIR(f2->stat.st_mode))
-		return (1);
-	else if ( ( S_ISDIR(f1->stat.st_mode) && S_ISDIR(f2->stat.st_mode) ) || ( !S_ISDIR(f1->stat.st_mode) && !S_ISDIR(f2->stat.st_mode)) )
-	{
-		if (ISFLAG(flag_r))
-			return (desc_sort(f1, f2));
-		else if (ISFLAG(flag_t))
-			return (time_sort(f1, f2));
-		else
-			return (asc_sort(f1, f2));
-	}
-	return (0);
-}
-
-void				split(t_file *head, t_file **a, t_file **b)
+void				split(t_file *head, t_file **b)
 {
 	t_file *slow;
 	t_file *fast;
@@ -102,7 +71,7 @@ void				merge_sort(t_file **head)
 		return ;
 	a = *head;
 	b = NULL;
-	split(*head, &a, &b);
+	split(*head, &b);
 	merge_sort(&a);
 	merge_sort(&b);
 	*head = merge(a, b, f_ptr);
@@ -119,7 +88,7 @@ void				ftype_merge_sort(t_file **head)
 		return ;
 	a = *head;
 	b = NULL;
-	split(*head, &a, &b);
+	split(*head, &b);
 	ftype_merge_sort(&a);
 	ftype_merge_sort(&b);
 	*head = merge(a, b, f_ptr);

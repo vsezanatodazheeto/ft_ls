@@ -6,28 +6,18 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/27 21:56:40 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/28 22:15:47 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int i = 0;
+int32_t				g_printed = 0;
 
 void				set_path(t_file *d_fl, char *path, char *old_path)
 {
 	*path = '\0';
 	old_path ? ft_strcat(path, old_path) : ft_strcat(path, d_fl->name);
-	// if (old_path)
-	// {
-	// 	ft_strcat(new_path, old_path);
-	// 	// ft_strcat(new_path, "/");
-	// }
-	// else
-	// {
-	// 	ft_strcat(new_path, d_fl->name);
-	// 	// ft_strcat(new_path, "/");
-	// }
 }
 
 void				set_fullpath_tofile(char *fullpath, const char *path, \
@@ -58,7 +48,7 @@ void				form_new_fls(t_file *d_fl, char *old_path)
 	if (!dir)
 		ERR_OPEND(new_path);
 	total = 0;
-	if (i)
+	if (g_printed)
 		ft_printf("\n");
 	if (d_fl->next || d_fl->prev)
 		ft_printf("%s:\n", new_path);
@@ -114,8 +104,6 @@ void		ft_ls(t_file *fls, char *path)
 	// if (S_ISDIR(fls->stat.st_mode))
 		// format_file_print(fls, fls->name);
 }
-
-void printFileProperties(struct stat stats);
 
 int			main(int ac, char *av[])
 {
