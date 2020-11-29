@@ -80,13 +80,19 @@ static void		format_date_print(time_t mtime)
 
 void			format_file_link_print(t_file *fls, const char *path)
 {
-	char		linked_f_name[NAME_MAX];
+	char		linked_f_name[PATH_MAX + NAME_MAX];
 	char		full_path_tolink[PATH_MAX + NAME_MAX];
 
 	*linked_f_name = '\0';
 	*full_path_tolink = '\0';
-	set_fullpath_tofile(full_path_tolink, path, fls->name);
-	if ((readlink(full_path_tolink, linked_f_name, PATH_MAX)) > 0)
+	if (path)
+		set_fullpath_tofile(full_path_tolink, path, fls->name);
+	else
+	{
+
+		ft_strcat(full_path_tolink, fls->name);
+	}
+	if ((readlink(full_path_tolink, linked_f_name, PATH_MAX + NAME_MAX)) > 0)
 		ft_printf(" -> %s", linked_f_name);
 }
 
