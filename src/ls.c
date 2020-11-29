@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/29 16:23:11 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/29 17:08:07 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,16 @@ int32_t		g_printed = 0;
 
 static void	set_path(t_file *d_fl, char *path, char *old_path)
 {
-	*path = '\0';
+	ft_bzero(path, PATH_MAX);
 	old_path ? ft_strcat(path, old_path) : ft_strcat(path, d_fl->name);
 }
 
-void		set_fullpath_tofile(char *fullpath, const char *path, \
+void		set_fullpath_tofile(char *full_path, const char *path, \
 										const char *fl_name)
 {
-	ft_strcat(fullpath, path);
-	ft_strcat(fullpath, fl_name);
+	ft_bzero(full_path, PATH_MAX + NAME_MAX);
+	ft_strcat(full_path, path);
+	ft_strcat(full_path, fl_name);
 }
 
 static void	ls_recursion(t_file *fls, const char *path)
