@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 23:15:13 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/29 16:23:11 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static void	set_path(t_file *d_fl, char *path, char *old_path)
 void		set_fullpath_tofile(char *fullpath, const char *path, \
 										const char *fl_name)
 {
-	*fullpath = '\0';
 	ft_strcat(fullpath, path);
 	ft_strcat(fullpath, fl_name);
 }
@@ -57,6 +56,7 @@ static void	ls_form_new_fls(DIR *dir, t_file **fls, const char *path, \
 	while ((entry = readdir(dir)))
 	{
 		ft_bzero(&stat_temp, sizeof(struct stat));
+		ft_bzero(full_path, PATH_MAX + NAME_MAX);
 		set_fullpath_tofile(full_path, path, entry->d_name);
 		if (lstat(full_path, &stat_temp) < 0)
 			ERR_STATF(entry->d_name);

@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 23:14:09 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/11/29 16:23:20 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,12 @@ void			format_file_link_print(t_file *fls, const char *path)
 	char		linked_f_name[PATH_MAX + NAME_MAX];
 	char		full_path_tolink[PATH_MAX + NAME_MAX];
 
-	*linked_f_name = '\0';
-	*full_path_tolink = '\0';
+	ft_bzero(linked_f_name, PATH_MAX + NAME_MAX);
+	ft_bzero(full_path_tolink, PATH_MAX + NAME_MAX);
 	if (path)
 		set_fullpath_tofile(full_path_tolink, path, fls->name);
 	else
-	{
-
 		ft_strcat(full_path_tolink, fls->name);
-	}
 	if ((readlink(full_path_tolink, linked_f_name, PATH_MAX + NAME_MAX)) > 0)
 		ft_printf(" -> %s", linked_f_name);
 }
