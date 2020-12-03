@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 23:15:38 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/28 23:15:39 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/12/03 20:44:12 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@
 
 # define EMSG_OPEND "ft_ls: "
 # define ERR_OPEND(f_name)({ft_fprintf(2, EMSG_OPEND); perror(f_name); return;})
+
+# define EMSG_LSEMPAR "ft_ls: arguments are empty"
+# define ERR_LSEMPAR ({ft_fprintf(2, "%s\n", EMSG_LSEMPAR); exit(2);})
 
 # define EMSG_STATF "ft_ls: "
 # define ERR_STATF(f_name)({ft_fprintf(2, EMSG_STATF); perror(f_name);})

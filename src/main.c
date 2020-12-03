@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:49 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/29 16:55:37 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/12/03 20:45:09 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ t_file			*parse_args(int ac, char *argv[])
 	char		**av_copy;
 
 	if (!(av = av_split(ac, (const char **)argv)))
+	{
+		if (AV_EMPTY_ARGS)
+			ERR_LSEMPAR;
 		ERR_AVSPLIT;
+	}
 	av_copy = av;
 	av = parse_check_flags(av);
 	fls = update_files(av);
