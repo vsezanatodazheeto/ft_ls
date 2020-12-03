@@ -21,7 +21,7 @@ H_NAME = ft_ls ft_ls_flags ft_ls_err
 H_NAME := $(addprefix $(H_DIR), $(addsuffix .h, $(H_NAME)))
 
 # PROGRAM NAME
-PROG_NAME = ft_ls
+NAME = ft_ls
 
 # PROGRAM DIR
 PROG_DIR := src/
@@ -42,17 +42,13 @@ PROG_SRC := $(addsuffix .c, $(PROG_SRC))
 PROG_SRC := $(addprefix $(PROG_DIR), $(PROG_SRC))
 L_NAME := $(addprefix $(L_DIR), $(L_NAME))
 
-# colour:
-				# @echo "\e[38;5;69m"
-# %.lib:	colour
-
-all: $(L_RULE) $(PROG_NAME)
+all: $(L_RULE) $(NAME)
 
 %.lib:
 	@$(MAKE) -sC $(L_DIR)
 
-$(PROG_NAME) : $(PROG_SRC) $(H_NAME) $(L_NAME)
-	@$(CC) $(CFLAGS) $(PROG_SRC) $(L_NAME) -I $(L_DIR)$(H_DIR) -o $(PROG_NAME) -I $(H_DIR)
+$(NAME) : $(PROG_SRC) $(H_NAME) $(L_NAME)
+	@$(CC) $(CFLAGS) $(PROG_SRC) $(L_NAME) -I $(L_DIR)$(H_DIR) -o $(NAME) -I $(H_DIR)
 	@echo $(BLUE)"FT_LS COMPILED"$(EOC)
 
 trash:
@@ -63,6 +59,6 @@ clean:
 
 fclean: clean trash
 	@$(MAKE) -sC $(L_DIR) fclean
-	@rm -f $(PROG_NAME)
+	@rm -f $(NAME)
 
 re: fclean all

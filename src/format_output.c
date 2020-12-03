@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 21:08:54 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/29 17:08:56 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/12/03 20:54:01 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ static char		*f_permissions(mode_t mode)
 	static char bits[11];
 
 	bits[0] = f_type(mode);
-	strcpy(&bits[1], rwx[(mode >> 6) & 7]);
-	strcpy(&bits[4], rwx[(mode >> 3) & 7]);
-	strcpy(&bits[7], rwx[(mode & 7)]);
+	ft_strcpy(&bits[1], rwx[(mode >> 6) & 7]);
+	ft_strcpy(&bits[4], rwx[(mode >> 3) & 7]);
+	ft_strcpy(&bits[7], rwx[(mode & 7)]);
 	if (mode & S_ISUID)
 		bits[3] = (mode & S_IXUSR) ? 's' : 'S';
 	if (mode & S_ISGID)

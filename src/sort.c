@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 13:06:30 by pcomic            #+#    #+#             */
-/*   Updated: 2020/11/28 22:12:36 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/12/03 21:53:22 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,16 @@ void				merge_sort(t_file **head)
 	t_file	*a;
 	t_file	*b;
 
-	if (ISFLAG(flag_r))
+	if (ISFLAG(flag_r) && ISFLAG(flag_t))
+		f_ptr = time_sort_rev;
+	else if (ISFLAG(flag_r))
 		f_ptr = desc_sort;
 	else if (ISFLAG(flag_t))
 		f_ptr = time_sort;
 	else
 		f_ptr = asc_sort;
 	if (*head == NULL || (*head)->next == NULL)
-		return ;
+		return;
 	a = *head;
 	b = NULL;
 	split(*head, &b);

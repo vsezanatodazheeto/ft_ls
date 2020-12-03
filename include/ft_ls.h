@@ -6,7 +6,7 @@
 /*   By: yshawn <yshawn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 23:18:12 by yshawn            #+#    #+#             */
-/*   Updated: 2020/11/29 16:54:48 by yshawn           ###   ########.fr       */
+/*   Updated: 2020/12/03 21:46:02 by yshawn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,8 @@ void				file_list_free(t_file **head);
 void				merge_sort(t_file **head);
 int					asc_sort(t_file *f1, t_file *f2);
 int					desc_sort(t_file *f1, t_file *f2);
-int					time_sort(t_file *f1, t_file *f2);
+int 				time_sort(t_file *f1, t_file *f2);
+int					time_sort_rev(t_file *f1, t_file *f2);
 int					first_sort(t_file *f1, t_file *f2);
 void				ftype_merge_sort(t_file **head);
 
